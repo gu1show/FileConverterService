@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class JsonWriter {
@@ -29,7 +30,7 @@ public class JsonWriter {
     }
 
     private JSONObject getConvertedFile() {
-        HashMap<String, ArrayList<JSONObject>> countryAndArtists = new HashMap<>();
+        LinkedHashMap<String, ArrayList<JSONObject>> countryAndArtists = new LinkedHashMap<>();
         for (Artist artist : ARTISTS) {
             JSONArray allPicturesOfArtist = getAllPicturesOfArtist(artist);
 
@@ -73,7 +74,7 @@ public class JsonWriter {
 
     private JSONArray getAllPicturesOfArtist(Artist artist) {
         JSONArray allPicturesOfArtist = new JSONArray();
-        Map<String, Integer> artistPictures = artist.getPictures();
+        LinkedHashMap<String, Integer> artistPictures = artist.getPictures();
         for (String namePicture : artistPictures.keySet()) {
             JSONObject pictureTag = new JSONObject();
             pictureTag.put("name", namePicture);

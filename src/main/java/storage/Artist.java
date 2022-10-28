@@ -1,20 +1,19 @@
 package storage;
 
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 public class Artist {
     private final String COUNTRY;
-
     private final String NAME;
-    private final Map<String, Integer> PICTURES;
+    private final LinkedHashMap<String, Integer> PICTURES;
 
-    public Artist(String country, String name, Map<String, Integer> pictures) {
+    public Artist(String country, String name, LinkedHashMap<String, Integer> pictures) {
         this.COUNTRY = country;
         this.NAME = name;
         this.PICTURES = pictures;
     }
 
-    public Map<String, Integer> getPictures() {
+    public LinkedHashMap<String, Integer> getPictures() {
         return PICTURES;
     }
 

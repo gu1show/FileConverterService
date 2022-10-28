@@ -44,7 +44,7 @@ public class XmlReader {
                     String artistName = artistElement.getElementsByTagName("name")
                             .item(0)
                             .getTextContent();
-                    Map<String, Integer> pictures = getPictures(artistElement);
+                    LinkedHashMap<String, Integer> pictures = getPictures(artistElement);
 
                     artists.add(new Artist(countryName, artistName, pictures));
                 }
@@ -56,8 +56,8 @@ public class XmlReader {
         return artists;
     }
 
-    private Map<String, Integer> getPictures(Element artist) {
-        Map<String, Integer> pictures = new HashMap<>();
+    private LinkedHashMap<String, Integer> getPictures(Element artist) {
+        LinkedHashMap<String, Integer> pictures = new LinkedHashMap<>();
         NodeList listOfPictures = artist.getElementsByTagName("picture");
         for (int i = 0; i < listOfPictures.getLength(); i++) {
             Element pictureNode = (Element) listOfPictures.item(i);
