@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class  JsonReader {
+public class JsonReader {
     private final String PATH;
 
     public JsonReader(String path) {
@@ -50,7 +50,7 @@ public class  JsonReader {
             JSONObject picture = pictures.getJSONObject(k);
 
             String pictureName = picture.getString("name");
-            int publicationYear = Integer.parseInt(picture.getString("publicationYear"));
+            int publicationYear = picture.getInt("publicationYear");
 
             allArtistPictures.put(pictureName, publicationYear);
         }
