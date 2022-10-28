@@ -7,11 +7,9 @@ import storage.Artist;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class JsonReader {
+public class  JsonReader {
     private final String PATH;
 
     public JsonReader(String path) {
@@ -36,7 +34,7 @@ public class JsonReader {
                 JSONObject artist = informationAboutArtists.getJSONObject(j);
 
                 String artistName = artist.getString("name");
-                Map<String, Integer> allArtistPictures = allArtistPictures(artist);
+                LinkedHashMap<String, Integer> allArtistPictures = allArtistPictures(artist);
 
                 artists.add(new Artist(countryName, artistName, allArtistPictures));
             }
@@ -45,8 +43,8 @@ public class JsonReader {
         return artists;
     }
 
-    private Map<String, Integer> allArtistPictures(JSONObject artist) {
-        Map<String, Integer> allArtistPictures = new HashMap<>();
+    private LinkedHashMap<String, Integer> allArtistPictures(JSONObject artist) {
+        LinkedHashMap<String, Integer> allArtistPictures = new LinkedHashMap<>();
         JSONArray pictures = artist.getJSONArray("picture");
         for (int k = 0; k < pictures.length(); k++) {
             JSONObject picture = pictures.getJSONObject(k);
