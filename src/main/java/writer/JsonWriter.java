@@ -1,8 +1,8 @@
 package writer;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import template.Artist;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import storage.Artist;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class JsonWriter {
         JSONObject jsonInterpretation = getConvertedFile();
 
         try (FileWriter file = new FileWriter(path)) {
-            file.write(jsonInterpretation.toJSONString());
+            file.write(jsonInterpretation.toString());
             file.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -30,9 +30,7 @@ public class JsonWriter {
 
     private JSONObject getConvertedFile() {
         HashMap<String, ArrayList<JSONObject>> countryAndArtists = new HashMap<>();
-        for (int i = 0; i < ARTISTS.size(); i++) {
-            Artist artist = artistList.get(i);
-
+        for (Artist artist : ARTISTS) {
             JSONArray allPicturesOfArtist = getAllPicturesOfArtist(artist);
 
             JSONObject artistTag = new JSONObject();
@@ -51,9 +49,18 @@ public class JsonWriter {
             }
         }
 
-        JSONObject countryList = new JSONObject();
-        for (String country : countryAndArtists.keySet())
-            countryList.put(country, countryAndArtists.get(country));
+        JSONArray countryList = new JSONArray();
+        for (String country : countryAndArtists.keySet()) {
+            JSONObject insideCountry = new JSONObject();
+            insideCountry.put("name", country);
+
+            JSONArray arr = new JSONArray();
+            for (JSONObject artist : countryAndArtists.get(country))
+                arr.put(artist);
+
+            insideCountry.put("artist", arr);
+            countryList.put(insideCountry);
+        }
 
         JSONObject countryTag = new JSONObject();
         countryTag.put("country", countryList);
@@ -72,7 +79,7 @@ public class JsonWriter {
             pictureTag.put("name", namePicture);
             pictureTag.put("publicationYear", artistPictures.get(namePicture));
 
-            allPicturesOfArtist.add(pictureTag);
+            allPicturesOfArtist.put(pictureTag);
         }
 
         return allPicturesOfArtist;
