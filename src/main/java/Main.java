@@ -7,24 +7,16 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException, TransformerConfigurationException {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Input the first filename:");
-        String first = scanner.nextLine();
-
-        System.out.println("Input the second filename:");
-        String second = scanner.nextLine();
-
-        String firstExtension = getExtension(first);
-        String secondExtension = getExtension(second);
+        String firstExtension = getExtension(args[0]);
+        String secondExtension = getExtension(args[1]);
         if ((firstExtension.equals("xml")) && (secondExtension.equals("json"))) {
-            XmlReader reader = new XmlReader(first);
+            XmlReader reader = new XmlReader(args[0]);
             JsonWriter writer = new JsonWriter(reader.read());
-            writer.write(second);
+            writer.write(args[1]);
         } else if ((firstExtension.equals("json")) && (secondExtension.equals("xml"))) {
-            JsonReader jsonReader = new JsonReader(first);
+            JsonReader jsonReader = new JsonReader(args[0]);
             XmlWriter writer = new XmlWriter(jsonReader.read());
-            writer.write(second);
+            writer.write(args[1]);
         } else throw new IllegalArgumentException("""
                 
                 Incorrect input. Input should contain 2 filenames:
