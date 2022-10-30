@@ -6,10 +6,7 @@ import storage.Artist;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JsonWriter {
     private final ArrayList<Artist> ARTISTS;

@@ -3,7 +3,6 @@ import writer.*;
 
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException, TransformerConfigurationException {
