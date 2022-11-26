@@ -49,8 +49,8 @@ public class XmlReader {
                     artists.add(new Artist(countryName, artistName, pictures));
                 }
             }
-        } catch (ParserConfigurationException | SAXException e) {
-            throw new RuntimeException(e);
+        } catch (ParserConfigurationException | SAXException exception) {
+            throw new RuntimeException(exception);
         }
 
         return artists;

@@ -21,8 +21,8 @@ public class JsonWriter {
         try (FileWriter file = new FileWriter(path)) {
             file.write(jsonInterpretation.toString());
             file.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
         }
     }
 

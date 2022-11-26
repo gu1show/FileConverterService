@@ -33,8 +33,8 @@ public class XmlWriter {
         StreamResult sr = new StreamResult(new File(path));
         try {
             transformer.transform(source, sr);
-        } catch (TransformerException e) {
-            throw new RuntimeException(e);
+        } catch (TransformerException exception) {
+            throw new RuntimeException(exception);
         }
     }
 
@@ -43,8 +43,8 @@ public class XmlWriter {
         DocumentBuilder builder;
         try {
             builder = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
+        } catch (ParserConfigurationException exception) {
+            throw new RuntimeException(exception);
         }
         Document file = builder.newDocument();
         file.setXmlStandalone(true);
