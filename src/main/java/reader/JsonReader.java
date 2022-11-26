@@ -43,7 +43,7 @@ public class JsonReader {
         return artists;
     }
 
-    private LinkedHashMap<String, Integer> allArtistPictures(JSONObject artist) {
+    private LinkedHashMap<String, Integer> allArtistPictures(final JSONObject artist) {
         LinkedHashMap<String, Integer> allArtistPictures = new LinkedHashMap<>();
         JSONArray pictures = artist.getJSONArray("picture");
         for (int k = 0; k < pictures.length(); k++) {

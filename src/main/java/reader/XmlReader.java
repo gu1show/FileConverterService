@@ -22,7 +22,7 @@ public class XmlReader {
         this.PATH = path;
     }
 
-    public ArrayList<Artist> read() throws IOException {
+    final public ArrayList<Artist> read() throws IOException {
         ArrayList<Artist> artists = new ArrayList<>();
 
         try {
@@ -56,7 +56,7 @@ public class XmlReader {
         return artists;
     }
 
-    private LinkedHashMap<String, Integer> getPictures(Element artist) {
+    private LinkedHashMap<String, Integer> getPictures(final Element artist) {
         LinkedHashMap<String, Integer> pictures = new LinkedHashMap<>();
         NodeList listOfPictures = artist.getElementsByTagName("picture");
         for (int i = 0; i < listOfPictures.getLength(); i++) {

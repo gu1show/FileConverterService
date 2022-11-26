@@ -23,7 +23,7 @@ public class XmlWriter {
         this.ARTISTS = artists;
     }
 
-    public void write(String path) throws TransformerConfigurationException {
+    public void write(final String path) throws TransformerConfigurationException {
         Document file = createDocument();
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -66,7 +66,7 @@ public class XmlWriter {
         return file;
     }
 
-    private Element getAllPicturesOfArtist(Artist artist, Document file) {
+    private Element getAllPicturesOfArtist(final Artist artist, final Document file) {
         Element picturesTag = file.createElement("pictures");
         Map<String, Integer> artistPictures = artist.getPictures();
         for (String namePicture : artistPictures.keySet()) {
@@ -86,7 +86,7 @@ public class XmlWriter {
         return picturesTag;
     }
 
-    private LinkedHashMap<String, ArrayList<Element>> coordinateCountryAndArtist(Document file) {
+    private LinkedHashMap<String, ArrayList<Element>> coordinateCountryAndArtist(final Document file) {
         LinkedHashMap<String, ArrayList<Element>> countryAndArtists = new LinkedHashMap<>();
         for (Artist artist : ARTISTS) {
             Element allPicturesOfArtist = getAllPicturesOfArtist(artist, file);

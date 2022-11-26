@@ -15,7 +15,7 @@ public class JsonWriter {
         this.ARTISTS = artists;
     }
 
-    public void write(String path) {
+    public void write(final String path) {
         JSONObject jsonInterpretation = getConvertedFile();
 
         try (FileWriter file = new FileWriter(path)) {
@@ -70,7 +70,7 @@ public class JsonWriter {
         return artistsTag;
     }
 
-    private JSONArray getAllPicturesOfArtist(Artist artist) {
+    private JSONArray getAllPicturesOfArtist(final Artist artist) {
         JSONArray allPicturesOfArtist = new JSONArray();
         LinkedHashMap<String, Integer> artistPictures = artist.getPictures();
         for (String namePicture : artistPictures.keySet()) {
