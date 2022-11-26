@@ -53,8 +53,9 @@ public class JsonWriter {
             insideCountry.put("name", country);
 
             JSONArray arr = new JSONArray();
-            for (JSONObject artist : countryAndArtists.get(country))
+            for (JSONObject artist : countryAndArtists.get(country)) {
                 arr.put(artist);
+            }
 
             insideCountry.put("artist", arr);
             countryList.put(insideCountry);

@@ -56,8 +56,9 @@ public class XmlWriter {
             Element countryTag = file.createElement("country");
             countryTag.setAttribute("name", country);
 
-            for (Element artist : countryAndArtists.get(country))
+            for (Element artist : countryAndArtists.get(country)) {
                 countryTag.appendChild(artist);
+            }
 
             root.appendChild(countryTag);
         }

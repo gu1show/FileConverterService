@@ -29,7 +29,10 @@ public class Main {
 
     private static String getExtension(String path) {
         int indexOfLastDot = path.lastIndexOf(".");
-        if (indexOfLastDot > -1) return path.substring(indexOfLastDot + 1);
-        else return "";
+        if (indexOfLastDot > -1) {
+            return path.substring(indexOfLastDot + 1);
+        } else {
+            return "";
+        }
     }
 }
