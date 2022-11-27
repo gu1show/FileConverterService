@@ -22,14 +22,14 @@ public class XmlReader {
     /**
      * The path to the file from which the data is read.
      */
-    private final String PATH;
+    private final String path;
 
     /**
      * Creating a reader with the specified path.
      * @param path Path to XML file.
      */
     public XmlReader(String path) {
-        this.PATH = path;
+        this.path = path;
     }
 
     /**
@@ -43,7 +43,7 @@ public class XmlReader {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(PATH));
+            Document document = builder.parse(new File(path));
             document.getDocumentElement().normalize();
 
             NodeList countries = document.getElementsByTagName("country");
@@ -65,6 +65,7 @@ public class XmlReader {
                 }
             }
         } catch (ParserConfigurationException | SAXException exception) {
+            exception.printStackTrace();
             throw new RuntimeException(exception);
         }
 

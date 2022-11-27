@@ -23,14 +23,14 @@ public class XmlWriter {
     /**
      * List of artists.
      */
-    private final ArrayList<Artist> ARTISTS;
+    private final ArrayList<Artist> artists;
 
     /**
      * Creating a writer of information about artists.
      * @param artists List of information about artists.
      */
     public XmlWriter(ArrayList<Artist> artists) {
-        this.ARTISTS = artists;
+        this.artists = artists;
     }
 
     /**
@@ -44,8 +44,9 @@ public class XmlWriter {
         Transformer transformer;
         try {
             transformer = transformerFactory.newTransformer();
-        } catch (TransformerConfigurationException e) {
-            throw new RuntimeException(e);
+        } catch (TransformerConfigurationException exception) {
+            exception.printStackTrace();
+            throw new RuntimeException(exception);
         }
         DOMSource source = new DOMSource(file);
 
@@ -53,6 +54,7 @@ public class XmlWriter {
         try {
             transformer.transform(source, sr);
         } catch (TransformerException exception) {
+            exception.printStackTrace();
             throw new RuntimeException(exception);
         }
     }
@@ -67,6 +69,7 @@ public class XmlWriter {
         try {
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException exception) {
+            exception.printStackTrace();
             throw new RuntimeException(exception);
         }
         Document file = builder.newDocument();
@@ -96,7 +99,7 @@ public class XmlWriter {
      */
     private LinkedHashMap<String, ArrayList<Element>> coordinateCountryAndArtist(final Document file) {
         LinkedHashMap<String, ArrayList<Element>> countryAndArtists = new LinkedHashMap<>();
-        for (Artist artist : ARTISTS) {
+        for (Artist artist : artists) {
             Element allPicturesOfArtist = getAllPicturesOfArtist(artist, file);
 
             Element artistTag = file.createElement("artist");

@@ -9,17 +9,17 @@ public class Artist {
     /**
      * Artist's country.
      */
-    private final String COUNTRY;
+    private final String country;
 
     /**
      * Artist's name.
      */
-    private final String NAME;
+    private final String name;
 
     /**
      * Artist's pictures.
      */
-    private final LinkedHashMap<String, Integer> PICTURES;
+    private final LinkedHashMap<String, Integer> pictures;
 
     /**
      * Creating an artist with country, name and pictures.
@@ -28,29 +28,29 @@ public class Artist {
      * @param pictures Artist's pictures with their names and years of publication.
      */
     public Artist(String country, String name, LinkedHashMap<String, Integer> pictures) {
-        this.COUNTRY = country;
-        this.NAME = name;
-        this.PICTURES = pictures;
+        this.country = country;
+        this.name = name;
+        this.pictures = pictures;
     }
 
     /**
      * @return Linked hashmap with artist's pictures.
      */
     public LinkedHashMap<String, Integer> getPictures() {
-        return PICTURES;
+        return pictures;
     }
 
     /**
      * @return Artist's name.
      */
     public String getName() {
-        return NAME;
+        return name;
     }
 
     /**
      * @return Artist's country.
      */
     public String getCountry() {
-        return COUNTRY;
+        return country;
     }
 }

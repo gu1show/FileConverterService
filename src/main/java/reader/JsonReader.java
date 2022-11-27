@@ -16,14 +16,14 @@ public class JsonReader {
     /**
      * The path to the file from which the data is read.
      */
-    private final String PATH;
+    private final String path;
 
     /**
      * Creating a reader with the specified path.
      * @param path Path to JSON file.
      */
     public JsonReader(String path) {
-        this.PATH = path;
+        this.path = path;
     }
 
     /**
@@ -34,7 +34,7 @@ public class JsonReader {
     public ArrayList<Artist> read() throws IOException {
         ArrayList<Artist> artists = new ArrayList<>();
 
-        String json = Files.readString(Paths.get(PATH));
+        String json = Files.readString(Paths.get(path));
         JSONObject file = new JSONObject(json);
 
         JSONObject artistsTag = file.getJSONObject("artists");

@@ -15,14 +15,14 @@ public class JsonWriter {
     /**
      * List of artists.
      */
-    private final ArrayList<Artist> ARTISTS;
+    private final ArrayList<Artist> artists;
 
     /**
      * Creating a writer of information about artists.
      * @param artists List of information about artists.
      */
     public JsonWriter(ArrayList<Artist> artists) {
-        this.ARTISTS = artists;
+        this.artists = artists;
     }
 
     /**
@@ -36,6 +36,7 @@ public class JsonWriter {
             file.write(jsonInterpretation.toString());
             file.flush();
         } catch (IOException exception) {
+            exception.printStackTrace();
             throw new RuntimeException(exception);
         }
     }
@@ -64,7 +65,7 @@ public class JsonWriter {
      */
     private LinkedHashMap<String, ArrayList<JSONObject>> getRelationshipBetweenCountryAndArtist() {
         LinkedHashMap<String, ArrayList<JSONObject>> countryAndArtists = new LinkedHashMap<>();
-        for (Artist artist : ARTISTS) {
+        for (Artist artist : artists) {
             JSONArray allPicturesOfArtist = getAllPicturesOfArtist(artist);
 
             JSONObject artistTag = new JSONObject();

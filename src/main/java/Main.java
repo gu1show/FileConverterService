@@ -15,14 +15,14 @@ public class Main {
      * @throws IOException If file does not exist.
      */
     public static void main(String[] args) throws IOException {
-        String errorMessage = """
+        final String errorMessage = """
                 
                 Incorrect input. Input should contain 2 filenames:
                 1) Existing file that you want to convert with extension .xml or .json
                 2) New converted file
                 """;
 
-        if (args.length != 2) {
+        if ((args == null) || (args.length != 2)) {
             throw new IllegalArgumentException(errorMessage);
         }
 
