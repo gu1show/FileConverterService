@@ -1,7 +1,5 @@
-import reader.JsonReader;
-import reader.XmlReader;
-import writer.JsonWriter;
-import writer.XmlWriter;
+import reader.*;
+import writer.*;
 
 import java.io.IOException;
 
@@ -17,6 +15,17 @@ public class Main {
      * @throws IOException If file does not exist.
      */
     public static void main(String[] args) throws IOException {
+        String errorMessage = """
+                
+                Incorrect input. Input should contain 2 filenames:
+                1) Existing file that you want to convert with extension .xml or .json
+                2) New converted file
+                """;
+
+        if (args.length != 2) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+
         String firstExtension = getExtension(args[0]);
         String secondExtension = getExtension(args[1]);
         if ((firstExtension.equals("xml")) && (secondExtension.equals("json"))) {
@@ -27,13 +36,9 @@ public class Main {
             JsonReader jsonReader = new JsonReader(args[0]);
             XmlWriter writer = new XmlWriter(jsonReader.read());
             writer.write(args[1]);
-        } else throw new IllegalArgumentException("""
-                
-                Incorrect input. Input should contain 2 filenames:
-                1) Existing file that you want to convert with extension .xml or .json
-                2) New converted file
-                """
-        );
+        } else {
+            throw new IllegalArgumentException(errorMessage);
+        }
 
         System.out.println("Converted successfully!");
     }
