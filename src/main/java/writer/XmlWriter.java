@@ -16,18 +16,37 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.*;
 
+/**
+ * Writer of information about artists to XML.
+ */
 public class XmlWriter {
+    /**
+     * List of artists.
+     */
     private final ArrayList<Artist> ARTISTS;
 
+    /**
+     * Creating a writer of information about artists.
+     * @param artists List of information about artists.
+     */
     public XmlWriter(ArrayList<Artist> artists) {
         this.ARTISTS = artists;
     }
 
-    public void write(final String path) throws TransformerConfigurationException {
+    /**
+     * Write information about artists to file.
+     * @param path Path where to write information about artists.
+     */
+    public void write(final String path) {
         Document file = createDocument();
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
+        Transformer transformer;
+        try {
+            transformer = transformerFactory.newTransformer();
+        } catch (TransformerConfigurationException e) {
+            throw new RuntimeException(e);
+        }
         DOMSource source = new DOMSource(file);
 
         StreamResult sr = new StreamResult(new File(path));
@@ -38,6 +57,10 @@ public class XmlWriter {
         }
     }
 
+    /**
+     * Create a document ready for writing.
+     * @return Ready for writing document.
+     */
     private Document createDocument() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
@@ -66,26 +89,11 @@ public class XmlWriter {
         return file;
     }
 
-    private Element getAllPicturesOfArtist(final Artist artist, final Document file) {
-        Element picturesTag = file.createElement("pictures");
-        Map<String, Integer> artistPictures = artist.getPictures();
-        for (String namePicture : artistPictures.keySet()) {
-            Element pictureTag = file.createElement("picture");
-
-            Element pictureNameTag = file.createElement("name");
-            pictureNameTag.setTextContent(namePicture);
-            Element publicationYearTag = file.createElement("publicationYear");
-            publicationYearTag.setTextContent(String.valueOf(artistPictures.get(namePicture)));
-
-            pictureTag.appendChild(pictureNameTag);
-            pictureTag.appendChild(publicationYearTag);
-
-            picturesTag.appendChild(pictureTag);
-        }
-
-        return picturesTag;
-    }
-
+    /**
+     * Separate all artists by countries and create tags for them.
+     * @param file File to create tags (feature of DOM Parser).
+     * @return Linked hashmap of relationships between country and artist.
+     */
     private LinkedHashMap<String, ArrayList<Element>> coordinateCountryAndArtist(final Document file) {
         LinkedHashMap<String, ArrayList<Element>> countryAndArtists = new LinkedHashMap<>();
         for (Artist artist : ARTISTS) {
@@ -111,5 +119,31 @@ public class XmlWriter {
         }
 
         return countryAndArtists;
+    }
+
+    /**
+     * Get Element with artist's pictures.
+     * @param artist Information about artist.
+     * @param file Document to create tags (feature of DOM Parser).
+     * @return Element with artist's pictures.
+     */
+    private Element getAllPicturesOfArtist(final Artist artist, final Document file) {
+        Element picturesTag = file.createElement("pictures");
+        Map<String, Integer> artistPictures = artist.getPictures();
+        for (String namePicture : artistPictures.keySet()) {
+            Element pictureTag = file.createElement("picture");
+
+            Element pictureNameTag = file.createElement("name");
+            pictureNameTag.setTextContent(namePicture);
+            Element publicationYearTag = file.createElement("publicationYear");
+            publicationYearTag.setTextContent(String.valueOf(artistPictures.get(namePicture)));
+
+            pictureTag.appendChild(pictureNameTag);
+            pictureTag.appendChild(publicationYearTag);
+
+            picturesTag.appendChild(pictureTag);
+        }
+
+        return picturesTag;
     }
 }

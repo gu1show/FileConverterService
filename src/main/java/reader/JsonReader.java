@@ -9,13 +9,28 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * Reader of information about artists from JSON.
+ */
 public class JsonReader {
+    /**
+     * The path to the file from which the data is read.
+     */
     private final String PATH;
 
+    /**
+     * Creating a reader with the specified path.
+     * @param path Path to JSON file.
+     */
     public JsonReader(String path) {
         this.PATH = path;
     }
 
+    /**
+     * Read information from JSON file and write it to list of artists.
+     * @return List of artists.
+     * @throws IOException If file does not exist.
+     */
     public ArrayList<Artist> read() throws IOException {
         ArrayList<Artist> artists = new ArrayList<>();
 
@@ -43,6 +58,11 @@ public class JsonReader {
         return artists;
     }
 
+    /**
+     * Get information about pictures.
+     * @param artist JSON object of artist.
+     * @return Linked hashmap of names and publication years of pictures.
+     */
     private LinkedHashMap<String, Integer> allArtistPictures(final JSONObject artist) {
         LinkedHashMap<String, Integer> allArtistPictures = new LinkedHashMap<>();
         JSONArray pictures = artist.getJSONArray("picture");

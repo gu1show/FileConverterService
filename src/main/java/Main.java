@@ -1,11 +1,22 @@
-import reader.*;
-import writer.*;
+import reader.JsonReader;
+import reader.XmlReader;
+import writer.JsonWriter;
+import writer.XmlWriter;
 
-import javax.xml.transform.TransformerConfigurationException;
 import java.io.IOException;
 
+/**
+ * Launching class.
+ */
 public class Main {
-    public static void main(String[] args) throws IOException, TransformerConfigurationException {
+    /**
+     * Launch the program to convert JSON file to XML file or vice versa.
+     * @param args Array of command-line arguments.
+     *             args[0] has a path to a source file.
+     *             args[1] has a path where to save the file.
+     * @throws IOException If file does not exist.
+     */
+    public static void main(String[] args) throws IOException {
         String firstExtension = getExtension(args[0]);
         String secondExtension = getExtension(args[1]);
         if ((firstExtension.equals("xml")) && (secondExtension.equals("json"))) {
@@ -27,6 +38,11 @@ public class Main {
         System.out.println("Converted successfully!");
     }
 
+    /**
+     * Get extension of the file.
+     * @param path Path to the file.
+     * @return Extension of the given file.
+     */
     private static String getExtension(String path) {
         int indexOfLastDot = path.lastIndexOf(".");
         if (indexOfLastDot > -1) {
