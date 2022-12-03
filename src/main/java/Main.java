@@ -1,3 +1,4 @@
+import lombok.NonNull;
 import reader.*;
 import writer.*;
 
@@ -14,7 +15,7 @@ public class Main {
      *             args[1] has a path where to save the file.
      * @throws IOException If file does not exist.
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(@NonNull String[] args) throws IOException {
         final String errorMessage = """
                 
                 Incorrect input. Input should contain 2 filenames:
@@ -22,7 +23,7 @@ public class Main {
                 2) New converted file
                 """;
 
-        if ((args == null) || (args.length != 2)) {
+        if (args.length != 2) {
             throw new IllegalArgumentException(errorMessage);
         }
 
