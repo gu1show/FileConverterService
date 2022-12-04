@@ -2,30 +2,32 @@ package storage;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.LinkedHashMap;
+import javax.xml.bind.annotation.*;
+import java.util.List;
 
 /**
- * Wrapper of information about artists.
+ * Обёртка для содержимого тега artist.
  */
-@Setter
+@XmlRootElement(name = "artist")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class Artist {
     /**
-     * Artist's country.
+     * ФИО художника.
      */
-    @NonNull private final String country;
+    @XmlElement(name = "name")
+    private String name;
 
     /**
-     * Artist's name.
+     * Картины художника.
      */
-    @NonNull private final String name;
-
-    /**
-     * Artist's pictures.
-     */
-    @NonNull private final LinkedHashMap<String, Integer> pictures;
+    @XmlElementWrapper(name = "pictures")
+    @XmlElement(name = "picture")
+    private List<Picture> pictures;
 }
