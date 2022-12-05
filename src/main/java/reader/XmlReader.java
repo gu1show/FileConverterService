@@ -1,99 +1,49 @@
 package reader;
 
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import storage.Artist;
+import storage.Artists;
+import storage.Country;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
- * Reader of information about artists from XML.
+ * Считыватель информации о художниках.
  */
 public class XmlReader {
     /**
-     * The path to the file from which the data is read.
+     * Путь к файлу, откуда считываются данные.
      */
     private final String path;
 
     /**
-     * Creating a reader with the specified path.
-     * @param path Path to XML file.
+     * Создание считывателя с определённого пути к файлу.
+     * @param path Путь к XML-файлу.
      */
     public XmlReader(String path) {
         this.path = path;
     }
 
     /**
-     * Read information from XML file and write it to list of artists.
-     * @return List of artists.
-     * @throws IOException If file does not exist.
+     * Считывание информации о стране и её художников с их картинами из XML-файла.
+     * @return Map с отношением страна-список картин с годом публикации.
+     * @throws JAXBException Если невозможно создать экземпляр без аргументов у какого-то класса из storage.
      */
-    final public ArrayList<Artist> read() throws IOException {
-        ArrayList<Artist> artists = new ArrayList<>();
+    final public Map<String, List<Artist>> read() throws JAXBException {
+        File file = new File(path);
 
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new File(path));
-            document.getDocumentElement().normalize();
+        JAXBContext jaxbContext = JAXBContext.newInstance(Artists.class);
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        List<Country> listCountryTag = ((Artists) unmarshaller.unmarshal(file)).getCountryList();
 
-            NodeList countries = document.getElementsByTagName("country");
-            for (int i = 0; i < countries.getLength(); i++) {
-                Element country = (Element) countries.item(i);
+        Map<String, List<Artist>> countryAndArtists = Collections.synchronizedMap(new LinkedHashMap<>());
+        listCountryTag.forEach(countryTag -> countryAndArtists.put(countryTag.getCountryName(),
+                                                                   countryTag.getArtistList()));
 
-                String countryName = country.getAttribute("name");
-
-                NodeList listOfArtistFromTheCountry = country.getElementsByTagName("artist");
-                for (int j = 0; j < listOfArtistFromTheCountry.getLength(); j++) {
-                    Element artistElement = (Element) listOfArtistFromTheCountry.item(j);
-
-                    String artistName = artistElement.getElementsByTagName("name")
-                            .item(0)
-                            .getTextContent();
-                    LinkedHashMap<String, Integer> pictures = getPictures(artistElement);
-
-                    artists.add(new Artist(countryName, artistName, pictures));
-                }
-            }
-        } catch (ParserConfigurationException | SAXException exception) {
-            exception.printStackTrace();
-            throw new RuntimeException(exception);
-        }
-
-        return artists;
-    }
-
-    /**
-     * Get information about pictures.
-     * @param artist Element with information about artist.
-     * @return Linked hashmap of names and publication years of pictures.
-     */
-    private LinkedHashMap<String, Integer> getPictures(final Element artist) {
-        LinkedHashMap<String, Integer> pictures = new LinkedHashMap<>();
-        NodeList listOfPictures = artist.getElementsByTagName("picture");
-        for (int i = 0; i < listOfPictures.getLength(); i++) {
-            Element pictureNode = (Element) listOfPictures.item(i);
-
-            Node nameNode = pictureNode.getElementsByTagName("name").item(0);
-            String pictureName = nameNode.getTextContent();
-
-            Node publicationYearNode = pictureNode.getElementsByTagName("publicationYear")
-                    .item(0);
-            String publicationYearString = publicationYearNode.getTextContent();
-            int publicationYear = Integer.parseInt(publicationYearString);
-
-            pictures.put(pictureName, publicationYear);
-        }
-
-        return pictures;
+        return countryAndArtists;
     }
 }
