@@ -3,37 +3,38 @@ package reader;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import storage.Artist;
-import storage.Picture;
+import storage.*;
 
 import javax.xml.bind.JAXBException;
 import java.util.*;
 
+
 /**
  * Тестовый класс для класса XmlReader.
  */
+
 public class XmlReaderTest {
     /**
      * Путь к XML-файлу.
      */
-    private static final String path = "src\\test\\resources\\artists.xml";
+    private static final String PATH = "src\\test\\resources\\artists.xml";
 
     /**
      * Вручную созданное отношение страны и художников.
      */
-    private Map<String, List<Artist>> countryAndArtistsManually;
+    private Wrapper correctWrapper;
 
     /**
-     * Считывание информации вручную.
+     * Создание корректной обёртки информации о художниках.
      */
     @Before
     public void readManually() {
-        countryAndArtistsManually = new LinkedHashMap<>();
+        Map<String, List<Artist>> countryAndArtistsManually = new LinkedHashMap<>();
 
         List<Picture> picturesOfClaude = new ArrayList<>();
         picturesOfClaude.add(new Picture("Impression, Sunrise", 1872));
         picturesOfClaude.add(new Picture("Arrival of the Normandy Train, Gare Saint-Lazare",
-                                         1877));
+                1877));
         picturesOfClaude.add(new Picture("Arch to the West from Etretat", 1883));
         Artist claude = new Artist("Claude Monet", picturesOfClaude);
 
@@ -46,7 +47,7 @@ public class XmlReaderTest {
         List<Artist> frenchArtists = new ArrayList<>();
         frenchArtists.add(claude);
         frenchArtists.add(paul);
-        countryAndArtistsManually.put("France", frenchArtists);
+        Country france = new Country("France", frenchArtists);
 
         List<Picture> picturesOfApollinary = new ArrayList<>();
         picturesOfApollinary.add(new Picture("Boreal forest in the Ural mountains", 1890));
@@ -63,47 +64,57 @@ public class XmlReaderTest {
         List<Artist> russianArtists = new ArrayList<>();
         russianArtists.add(apollinary);
         russianArtists.add(viktor);
-        countryAndArtistsManually.put("Russia", russianArtists);
+        Country russia = new Country("Russia", russianArtists);
+
+        List<Country> countryList = new ArrayList<>();
+        countryList.add(france);
+        countryList.add(russia);
+
+        correctWrapper = new Wrapper(new Artists(countryList));
     }
 
     /**
-     * Проверка, что созданное вручную и программой отношения равны.
+     * Проверка, что созданные вручную и программой обёртки одинаковые.
      * @throws JAXBException Происходит из-за метода read у XmlReader.
      * Срабатывает, если невозможно создать экземпляр без аргументов у какого-то класса из storage.
      */
     @Test
     public void checkReadingFromXml() throws JAXBException {
-        XmlReader xmlReader = new XmlReader(path);
-        Map<String, List<Artist>> countryAndArtistsFromFile = xmlReader.read();
+        XmlReader xmlReader = new XmlReader(PATH);
+        Wrapper wrapperFile = xmlReader.read();
 
-        Set<String> countriesFromFile = countryAndArtistsFromFile.keySet();
-        Set<String> countriesManually = countryAndArtistsManually.keySet();
+        Artists artistsFromFile = wrapperFile.getArtists();
+        Artists artistsManually = correctWrapper.getArtists();
+        List<Country> countriesFromFile = artistsFromFile.getCountryList();
+        List<Country> countriesManually = artistsManually.getCountryList();
 
         Assert.assertEquals(countriesFromFile.size(), countriesManually.size());
 
-        for (String country : countriesFromFile) {
-            Assert.assertTrue(countriesManually.contains(country));
-        }
+        for (int countryIndex = 0; countryIndex < countriesFromFile.size(); countryIndex++) {
+            Country countryFromFile = countriesFromFile.get(countryIndex);
+            Country countryManually = countriesManually.get(countryIndex);
 
-        for (String country : countriesFromFile) {
-            List<Artist> artistsFromCountryFile = countryAndArtistsFromFile.get(country);
-            List<Artist> artistsFromCountryManually = countryAndArtistsManually.get(country);
+            Assert.assertEquals(countryFromFile.getCountryName(), countryManually.getCountryName());
 
-            Assert.assertEquals(artistsFromCountryFile.size(), artistsFromCountryManually.size());
+            List<Artist> artistListFromFile = countryFromFile.getArtistList();
+            List<Artist> artistListManually = countryManually.getArtistList();
 
-            for (int artistNumber = 0; artistNumber < artistsFromCountryFile.size(); artistNumber++) {
-                Artist artistFromFile = artistsFromCountryFile.get(artistNumber);
-                Artist artistManually = artistsFromCountryManually.get(artistNumber);
+            Assert.assertEquals(artistListFromFile.size(), artistListManually.size());
+
+            for (int artistIndex = 0; artistIndex < artistListFromFile.size(); artistIndex++) {
+                Artist artistFromFile = artistListFromFile.get(artistIndex);
+                Artist artistManually = artistListManually.get(artistIndex);
 
                 Assert.assertEquals(artistFromFile.getName(), artistManually.getName());
 
-                List<Picture> picturesFromFile = artistFromFile.getPictures();
-                List<Picture> picturesManually = artistManually.getPictures();
-                Assert.assertEquals(picturesFromFile.size(), picturesManually.size());
+                List<Picture> pictureListFromFile = artistFromFile.getPictures();
+                List<Picture> pictureListManually = artistManually.getPictures();
 
-                for (int pictureNumber = 0; pictureNumber < picturesFromFile.size(); pictureNumber++) {
-                    Picture pictureFromFile = picturesFromFile.get(pictureNumber);
-                    Picture pictureManually = picturesManually.get(pictureNumber);
+                Assert.assertEquals(pictureListFromFile.size(), pictureListManually.size());
+
+                for (int pictureIndex = 0; pictureIndex < pictureListFromFile.size(); pictureIndex++) {
+                    Picture pictureFromFile = pictureListFromFile.get(pictureIndex);
+                    Picture pictureManually = pictureListManually.get(pictureIndex);
 
                     Assert.assertEquals(pictureFromFile.getName(), pictureManually.getName());
                     Assert.assertEquals(pictureFromFile.getPublicationYear(), pictureManually.getPublicationYear());

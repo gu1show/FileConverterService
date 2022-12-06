@@ -1,6 +1,10 @@
 package storage;
 
-import lombok.*;
+import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -22,5 +26,6 @@ public class Artists {
      * Список блоков со страной и её художниками.
      */
     @XmlElement(name = "country")
+    @SerializedName("country")
     private List<Country> countryList;
 }

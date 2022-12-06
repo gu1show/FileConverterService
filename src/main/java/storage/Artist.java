@@ -1,5 +1,6 @@
 package storage;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,5 +30,6 @@ public class Artist {
      */
     @XmlElementWrapper(name = "pictures")
     @XmlElement(name = "picture")
+    @SerializedName("picture")
     private List<Picture> pictures;
 }
