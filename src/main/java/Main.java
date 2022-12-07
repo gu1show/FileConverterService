@@ -1,60 +1,61 @@
 import lombok.NonNull;
+import org.apache.commons.io.FilenameUtils;
 import reader.*;
 import writer.*;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 
 /**
- * Launching class.
+ * Запускающий класс.
  */
 public class Main {
     /**
-     * Launch the program to convert JSON file to XML file or vice versa.
-     * @param args Array of command-line arguments.
-     *             args[0] has a path to a source file.
-     *             args[1] has a path where to save the file.
-     * @throws IOException If file does not exist.
+     * Запускает конвертер из JSON в XML или наоборот.
+     * @param args Массив аргументов входной строки.
+     *             Первый элемент содержит путь к исходному файлу.
+     *             Второй элемент содержит путь, куда записывается конвертированный файл.
+     * @throws IOException Если файл не существует.
+     * @throws JAXBException Происходит из-за метода read у XmlReader.
+     * Срабатывает, если невозможно создать экземпляр без аргументов у какого-то класса из storage.
      */
-    public static void main(@NonNull String[] args) throws IOException {
+    public static void main(@NonNull String[] args) throws IOException, JAXBException {
         final String errorMessage = """
                 
-                Incorrect input. Input should contain 2 filenames:
-                1) Existing file that you want to convert with extension .xml or .json
-                2) New converted file
+                Неверный ввод. Ввод должен сорержать ровна 2 пути к файлам:
+                1) Существующий файл, который вы хотите конвертировать с разрешением .xml или .json.
+                2) Новый сконвертированный файл разрешения .xml или .json, но отличающийся от первого.
                 """;
 
         if (args.length != 2) {
             throw new IllegalArgumentException(errorMessage);
         }
 
-        String firstExtension = getExtension(args[0]);
-        String secondExtension = getExtension(args[1]);
-        if ((firstExtension.equals("xml")) && (secondExtension.equals("json"))) {
-            XmlReader reader = new XmlReader(args[0]);
+        final String firstExtension = args[0];
+        final String secondExtension = args[1];
+
+        if ((FilenameUtils.getExtension(firstExtension).equals("xml")) &&
+            (FilenameUtils.getExtension(secondExtension).equals("json"))) {
+            XmlReader reader = new XmlReader(firstExtension);
             JsonWriter writer = new JsonWriter(reader.read());
-            writer.write(args[1]);
-        } else if ((firstExtension.equals("json")) && (secondExtension.equals("xml"))) {
-            JsonReader jsonReader = new JsonReader(args[0]);
+            writer.write(secondExtension);
+
+            System.out.println("Converted successfully!");
+
+            return;
+        }
+
+        if ((FilenameUtils.getExtension(firstExtension).equals("json")) &&
+            (FilenameUtils.getExtension(secondExtension).equals("xml"))) {
+            JsonReader jsonReader = new JsonReader(firstExtension);
             XmlWriter writer = new XmlWriter(jsonReader.read());
-            writer.write(args[1]);
-        } else {
-            throw new IllegalArgumentException(errorMessage);
+            writer.write(secondExtension);
+
+            System.out.println("Converted successfully!");
+
+            return;
         }
 
-        System.out.println("Converted successfully!");
-    }
-
-    /**
-     * Get extension of the file.
-     * @param path Path to the file.
-     * @return Extension of the given file.
-     */
-    private static String getExtension(String path) {
-        int indexOfLastDot = path.lastIndexOf(".");
-        if (indexOfLastDot > -1) {
-            return path.substring(indexOfLastDot + 1);
-        } else {
-            return "";
-        }
+        throw new IllegalArgumentException("Неверный ввод. На входе должны быть JSON-файл и XML-файл.");
     }
 }
