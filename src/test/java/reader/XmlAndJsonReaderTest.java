@@ -12,7 +12,7 @@ import java.util.List;
 
 
 /**
- * Тестовый класс для класса XmlReader.
+ * Тестовый класс для считывателей XmlReader и JsonReader.
  */
 
 public class XmlAndJsonReaderTest {
