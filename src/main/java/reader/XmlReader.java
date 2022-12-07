@@ -9,7 +9,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.File;
 
 /**
- * Считыватель информации о художниках.
+ * Считыватель информации о художниках из XML.
  */
 public class XmlReader {
     /**
