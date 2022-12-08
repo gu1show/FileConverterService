@@ -85,8 +85,8 @@ public class XmlAndJsonReaderTest {
      */
     @Test
     public void checkReadingFromXml() throws JAXBException {
-        XmlReader xmlReader = new XmlReader(PATH_XML);
-        Wrapper wrapperFromFile = xmlReader.read();
+        XmlReader xmlReader = new XmlReader();
+        Wrapper wrapperFromFile = xmlReader.read(PATH_XML);
 
         checkCorrectness(wrapperFromFile);
     }
@@ -98,8 +98,8 @@ public class XmlAndJsonReaderTest {
      */
     @Test
     public void checkReadingFromJson() throws IOException {
-        JsonReader jsonReader = new JsonReader(PATH_JSON);
-        Wrapper wrapperFromFile = jsonReader.read();
+        JsonReader jsonReader = new JsonReader();
+        Wrapper wrapperFromFile = jsonReader.read(PATH_JSON);
 
         checkCorrectness(wrapperFromFile);
     }

@@ -11,26 +11,14 @@ import java.io.File;
 /**
  * Считыватель информации о художниках из XML.
  */
-public class XmlReader {
-    /**
-     * Путь к файлу, откуда считываются данные.
-     */
-    private final String path;
-
-    /**
-     * Создание считывателя с определённого пути к файлу.
-     * @param path Путь к XML-файлу.
-     */
-    public XmlReader(String path) {
-        this.path = path;
-    }
-
+public class XmlReader implements Reader {
     /**
      * Считывание информации о стране и её художников с их картинами из XML-файла.
+     * @param path Путь к XML-файлу, из которого нужно считывать информацию.
      * @return Обёртка для хранения информации о художниках.
      * @throws JAXBException Если невозможно создать экземпляр без аргументов у какого-то класса из storage.
      */
-    final public Wrapper read() throws JAXBException {
+    final public Wrapper read(final String path) throws JAXBException {
         File file = new File(path);
 
         JAXBContext jaxbContext = JAXBContext.newInstance(Artists.class);

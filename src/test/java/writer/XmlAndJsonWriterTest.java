@@ -43,9 +43,9 @@ public class XmlAndJsonWriterTest {
     public void checkWritingToXml() throws IOException, JAXBException {
         String contentSourceXml = FileUtils.readFileToString(new File(PATH_SOURCE_XML), "utf-8");
 
-        JsonReader jsonReader = new JsonReader(PATH_SOURCE_JSON);
-        XmlWriter xmlWriter = new XmlWriter(jsonReader.read());
-        xmlWriter.write(PATH_CONVERTED_XML);
+        JsonReader jsonReader = new JsonReader();
+        XmlWriter xmlWriter = new XmlWriter();
+        xmlWriter.write(PATH_CONVERTED_XML, jsonReader.read(PATH_SOURCE_JSON));
 
         String contentConvertedXml = FileUtils.readFileToString(new File(PATH_CONVERTED_XML), "utf-8");
 
@@ -62,9 +62,9 @@ public class XmlAndJsonWriterTest {
     public void checkWritingToJson() throws IOException, JAXBException {
         String contentSourceJson = FileUtils.readFileToString(new File(PATH_SOURCE_JSON), "utf-8");
 
-        XmlReader xmlReader = new XmlReader(PATH_SOURCE_XML);
-        JsonWriter jsonWriter = new JsonWriter(xmlReader.read());
-        jsonWriter.write(PATH_CONVERTED_JSON);
+        XmlReader xmlReader = new XmlReader();
+        JsonWriter jsonWriter = new JsonWriter();
+        jsonWriter.write(PATH_CONVERTED_JSON, xmlReader.read(PATH_SOURCE_XML));
 
         String contentConvertedJson = FileUtils.readFileToString(new File(PATH_CONVERTED_JSON), "utf-8");
 
