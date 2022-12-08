@@ -36,4 +36,19 @@ public class ConverterMaker {
             return ConverterType.WRONG;
         }
     }
+
+    /**
+     * Определяет тип конвертера.
+     * @param source Расширение файла, из которого считываются данные.
+     * @return Тип конвертера.
+     */
+    public ConverterType determineTypeOfConversion(String source) {
+        if (source.equals("xml")) {
+            return ConverterType.XML_2_JSON;
+        } else if (source.equals("json")) {
+            return ConverterType.JSON_2_XML;
+        } else {
+            return ConverterType.WRONG;
+        }
+    }
 }
