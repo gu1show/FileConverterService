@@ -1,5 +1,6 @@
 import factory.Converter;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.io.IOException;
 /**
  * Запускающий класс.
  */
+@Slf4j
 public class Main {
     /**
      * Запускает конвертер из JSON в XML или наоборот.
@@ -18,7 +20,18 @@ public class Main {
      * без аргументов у какого-то класса из storage.
      */
     public static void main(@NonNull String[] args) throws IOException, JAXBException {
+        log.info("Программа запущена.");
         Converter converter = new Converter(args);
-        converter.convert();
+        try {
+            converter.convert();
+            log.info("Программа завершена.");
+            System.out.println("Конвертация прошла успешно.");
+        } catch (JAXBException exception) {
+            System.out.println("Произошла внутренняя ошибка.");
+            throw new JAXBException(exception);
+        } catch (IOException exception) {
+            System.out.println("Произошла ошибка при считывании из файла или записи в файл.");
+            throw new IOException(exception);
+        }
     }
 }
