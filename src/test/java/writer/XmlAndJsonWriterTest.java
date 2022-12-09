@@ -1,13 +1,13 @@
 package writer;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import reader.*;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.io.Reader;
 
 /**
  * Тестовый класс для записывателей XmlWriter и JsonWriter.
@@ -41,15 +41,17 @@ public class XmlAndJsonWriterTest {
      */
     @Test
     public void checkWritingToXml() throws IOException, JAXBException {
-        String contentSourceXml = FileUtils.readFileToString(new File(PATH_SOURCE_XML), "utf-8");
-
         JsonReader jsonReader = new JsonReader();
         XmlWriter xmlWriter = new XmlWriter();
         xmlWriter.write(PATH_CONVERTED_XML, jsonReader.read(PATH_SOURCE_JSON));
 
-        String contentConvertedXml = FileUtils.readFileToString(new File(PATH_CONVERTED_XML), "utf-8");
+        Reader sourceReader = new BufferedReader(new FileReader(PATH_SOURCE_XML));
+        Reader convertedFileReader = new BufferedReader(new FileReader(PATH_CONVERTED_XML));
 
-        Assert.assertEquals(contentSourceXml, contentConvertedXml);
+        Assert.assertTrue(IOUtils.contentEqualsIgnoreEOL(sourceReader, convertedFileReader));
+
+        sourceReader.close();
+        convertedFileReader.close();
     }
 
     /**
@@ -60,14 +62,16 @@ public class XmlAndJsonWriterTest {
      */
     @Test
     public void checkWritingToJson() throws IOException, JAXBException {
-        String contentSourceJson = FileUtils.readFileToString(new File(PATH_SOURCE_JSON), "utf-8");
-
         XmlReader xmlReader = new XmlReader();
         JsonWriter jsonWriter = new JsonWriter();
         jsonWriter.write(PATH_CONVERTED_JSON, xmlReader.read(PATH_SOURCE_XML));
 
-        String contentConvertedJson = FileUtils.readFileToString(new File(PATH_CONVERTED_JSON), "utf-8");
+        Reader sourceReader = new BufferedReader(new FileReader(PATH_SOURCE_JSON));
+        Reader convertedFileReader = new BufferedReader(new FileReader(PATH_CONVERTED_JSON));
 
-        Assert.assertEquals(contentSourceJson, contentConvertedJson);
+        Assert.assertTrue(IOUtils.contentEqualsIgnoreEOL(sourceReader, convertedFileReader));
+
+        sourceReader.close();
+        convertedFileReader.close();
     }
 }
