@@ -1,9 +1,10 @@
 package factory;
 
 import lombok.extern.slf4j.Slf4j;
-import reader.Reader;
-import storage.Wrapper;
-import writer.Writer;
+import reader.ConcreteReader;
+import model.Wrapper;
+import validator.InputValidator;
+import writer.ConcreteWriter;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -19,55 +20,46 @@ public class Converter {
     private final String[] arguments;
 
     /**
-     * Создание конвертера с определённой информацией о конвертации.
-     * @param arguments Аргументы, в которых хранится информация, как производить конвертацию.
+     * Кодировка, в которой считаются и записываются файлы.
      */
-    public Converter(String[] arguments) {
-        this.arguments = arguments;
+    private final String encoding;
+
+    /**
+     * Определённый считыватель.
+     */
+    private final ConcreteReader concreteReader;
+
+    /**
+     * Определённый записыватель.
+     */
+    private final ConcreteWriter concreteWriter;
+
+    /**
+     * Создание конвертера с определённой информацией о конвертации.
+     * @param inputValidator Валидатор, который проверил на доступность для записи и чтения представленные файлы.
+     *                       Определяет кодировку введённого файла.
+     */
+    public Converter(InputValidator inputValidator) throws Exception {
+        inputValidator.validate();
+        this.arguments = inputValidator.getArguments();
+        this.encoding = inputValidator.getEncoding();
+
+        AbstractConverter converter = createAbstractConverter();
+        concreteReader = converter.getReader();
+        concreteWriter = converter.getWriter();
     }
 
     /**
      * Конвертирует файлы из одного типа в другой.
      * @throws JAXBException Если невозможно создать экземпляр без аргументов у какого-то класса из storage.
-     * @throws IOException Если файла не существует.
+     * @throws IOException Если файла не существует, отсутствуют права на чтение или запись.
      */
     public void convert() throws JAXBException, IOException {
-        if ((arguments.length != 2) && (arguments.length != 3)) {
-            log.error("Неверный ввод. На входе должно быть 2 или 3 аргумента.");
-            throw new IllegalArgumentException("Неверный ввод. На входе должно быть 2 или 3 аргумента");
-        }
-
-        AbstractConverter converter = createAbstractConverter();
-
         log.info("Начинается считывание.");
-        final Reader reader = converter.read();
-        Wrapper wrapper;
-        try {
-            wrapper = reader.read(arguments[0]);
-        } catch (JAXBException exception) {
-            String message = "Невозможно создать экземпляр без аргументов у какого-то класса из пакета storage.";
-            log.error(message);
-            throw new JAXBException(message);
-        } catch (IOException exception) {
-            String message = "Не существует файла, из которого нужно считывать данные.";
-            log.error(message);
-            throw new IOException(message);
-        }
+        Wrapper wrapper = concreteReader.read(arguments[0], encoding);
 
         log.info("Считывание завершено. Начинается запись.");
-
-        final Writer writer = converter.write();
-        try {
-            writer.write(arguments[1], wrapper);
-        } catch (IOException exception) {
-            String message = "Невозможно создать файл для записи.";
-            log.error(message);
-            throw new IOException(exception);
-        } catch (JAXBException exception) {
-            String message = "Невозможно создать экземпляр без аргументов у какого-то класса из пакета storage.";
-            log.error(message);
-            throw new JAXBException(exception);
-        }
+        concreteWriter.write(arguments[1], wrapper, encoding);
     }
 
     /**

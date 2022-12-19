@@ -1,13 +1,13 @@
 package factory;
 
-import reader.Reader;
-import writer.Writer;
+import reader.ConcreteReader;
+import writer.ConcreteWriter;
 
 /**
  * Интерфейс для создания конвертера.
  */
 public interface AbstractConverter {
-    Reader read();
+    ConcreteReader getReader();
 
-    Writer write();
+    ConcreteWriter getWriter();
 }

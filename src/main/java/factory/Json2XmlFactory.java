@@ -1,8 +1,8 @@
 package factory;
 
 import reader.JsonReader;
-import reader.Reader;
-import writer.Writer;
+import reader.ConcreteReader;
+import writer.ConcreteWriter;
 import writer.XmlWriter;
 
 /**
@@ -14,7 +14,7 @@ public class Json2XmlFactory implements AbstractConverter {
      * @return JsonReader.
      */
     @Override
-    public Reader read() {
+    public ConcreteReader getReader() {
         return new JsonReader();
     }
 
@@ -23,7 +23,7 @@ public class Json2XmlFactory implements AbstractConverter {
      * @return XmlReader.
      */
     @Override
-    public Writer write() {
+    public ConcreteWriter getWriter() {
         return new XmlWriter();
     }
 }
