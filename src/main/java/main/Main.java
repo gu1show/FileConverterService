@@ -14,15 +14,19 @@ import javax.xml.bind.JAXBException;
 @Slf4j
 public class Main {
     public static void main(@NonNull String[] args) throws Exception {
-        log.info("Программа запущена.");
+        log.info("Конвертация запущена.");
         try {
-            new Converter(new InputValidator(args)).convert();
+            log.info("Начинается валидация.");
+            InputValidator validator = new InputValidator(args);
+            validator.validate();
+            log.info("Валидация завершена.");
+
+            new Converter(validator).convert();
         } catch (JAXBException exception) {
             val message = "Невозможно создать экземпляр без аргументов у какого-то класса из пакета model.";
             System.out.println(message);
-            throw new JAXBException(message);
         }
-        log.info("Программа завершена.");
+        log.info("Конвертация завершена.");
         System.out.println("Конвертация прошла успешно.");
     }
 }

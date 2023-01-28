@@ -8,6 +8,6 @@ import java.io.IOException;
 /**
  * Интерфейс для записывания данных в файл.
  */
-public interface ConcreteWriter {
+public interface BasicWriter {
     void write(String path, Wrapper artistsWrapper, String encoding) throws IOException, JAXBException;
 }

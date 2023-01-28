@@ -1,5 +1,6 @@
 package writer;
 
+import lombok.val;
 import model.Wrapper;
 
 import javax.xml.bind.JAXBContext;
@@ -10,7 +11,7 @@ import java.io.*;
 /**
  * Записыватель информации о художниках в XML-файл с определённой кодировкой.
  */
-public class XmlWriter implements ConcreteWriter {
+public class XmlWriter implements BasicWriter {
     /**
      * Записывает информацию о художниках в XML-файл по заданной кодировке.
      * @param path Путь, куда записывается информация о художниках.
@@ -22,13 +23,14 @@ public class XmlWriter implements ConcreteWriter {
      */
     public void write(final String path, final Wrapper artistsWrapper, final String encoding) throws JAXBException,
                                                                                                      IOException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(Wrapper.class);
-        Marshaller marshaller = jaxbContext.createMarshaller();
+        val jaxbContext = JAXBContext.newInstance(Wrapper.class);
+        val marshaller = jaxbContext.createMarshaller();
 
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
 
-        try (OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(path), encoding)) {
+        try (val output = new OutputStreamWriter(
+                              new FileOutputStream(path), encoding)) {
             marshaller.marshal(artistsWrapper.getArtists(), output);
         }
     }

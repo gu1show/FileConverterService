@@ -4,9 +4,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.any23.encoding.TikaEncodingDetector;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
-import static java.nio.charset.Charset.forName;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -49,24 +50,50 @@ public class InputValidator {
 
         if (!new File(arguments[0]).exists()) {
             val message = "Файл для считывания не существует";
-            System.out.println(message);
+            log.error(message);
             throw new IOException(message);
         }
 
         if (!Files.isReadable(Path.of(arguments[0]))) {
             val message = "Отсутствуют права на чтение";
-            System.out.println(message);
+            log.error(message);
             throw new IOException(message);
         }
 
         if (!new File(arguments[1]).canWrite()) {
             val message = "Отсутствуют права на запись";
-            System.out.println(message);
+            log.error(message);
             throw new IOException(message);
         }
 
-        try (InputStream input = new BufferedInputStream(new FileInputStream(arguments[0]))) {
-            encoding = forName(new TikaEncodingDetector().guessEncoding(input)).toString();
+        if (!canConvert()) {
+            val message = "Неверный ввод. Один из файлов должен иметь расширение XML, другой - JSON.";
+            log.error(message);
+            throw new IllegalArgumentException(message);
         }
+
+        if (encoding == null) {
+            try (val input = new BufferedInputStream(
+                                 new FileInputStream(arguments[0]))) {
+                encoding = new TikaEncodingDetector().guessEncoding(input);
+            }
+        } else {
+            encoding = encoding.toLowerCase();
+        }
+    }
+
+    /**
+     * Проверяет возможность конвертации файлов.
+     * @return true, если конвертатор может провести конвертацию, false - иначе.
+     */
+    private boolean canConvert() {
+        val firstFileExtension = FilenameUtils.getExtension(arguments[0]);
+        val secondFileExtension = FilenameUtils.getExtension(arguments[1]);
+
+        if ((StringUtils.equals(firstFileExtension, "xml")) && (StringUtils.equals(secondFileExtension, "json"))) {
+            return true;
+        }
+
+        return (StringUtils.equals(firstFileExtension, "json")) && (StringUtils.equals(secondFileExtension, "xml"));
     }
 }

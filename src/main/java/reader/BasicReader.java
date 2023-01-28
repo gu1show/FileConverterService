@@ -8,6 +8,6 @@ import java.io.IOException;
 /**
  * Интерфейс для считывания данных из файла.
  */
-public interface ConcreteReader {
+public interface BasicReader {
     Wrapper read(String path, String encoding) throws JAXBException, IOException;
 }

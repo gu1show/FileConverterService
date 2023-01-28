@@ -1,9 +1,9 @@
 package factory;
 
-import reader.ConcreteReader;
+import reader.BasicReader;
 import reader.XmlReader;
+import writer.BasicWriter;
 import writer.JsonWriter;
-import writer.ConcreteWriter;
 
 /**
  * Фабрика для конвертации из XML в JSON.
@@ -14,7 +14,7 @@ public class Xml2JsonFactory implements AbstractConverter {
      * @return XmlReader.
      */
     @Override
-    public ConcreteReader getReader() {
+    public BasicReader getReader() {
         return new XmlReader();
     }
 
@@ -23,7 +23,7 @@ public class Xml2JsonFactory implements AbstractConverter {
      * @return JsonWriter.
      */
     @Override
-    public ConcreteWriter getWriter() {
+    public BasicWriter getWriter() {
         return new JsonWriter();
     }
 }

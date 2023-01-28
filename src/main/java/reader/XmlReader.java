@@ -1,17 +1,17 @@
 package reader;
 
+import lombok.val;
 import model.Artists;
 import model.Wrapper;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import java.io.*;
 
 /**
  * Считыватель информации о художниках из XML-файла с определённой кодировкой.
  */
-public class XmlReader implements ConcreteReader {
+public class XmlReader implements BasicReader {
     /**
      * Считывание информации о стране и её художников с их картинами из XML-файла с определённой кодировкой.
      * @param path Путь к XML-файлу, из которого нужно считывать информацию.
@@ -22,11 +22,11 @@ public class XmlReader implements ConcreteReader {
      */
     final public Wrapper read(final String path, final String encoding) throws JAXBException, IOException {
         final Artists listCountryTag;
-        try (BufferedReader input = new BufferedReader(
+        try (val input = new BufferedReader(
                                         new InputStreamReader(
                                             new FileInputStream(path), encoding))) {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Artists.class);
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            val jaxbContext = JAXBContext.newInstance(Artists.class);
+            val unmarshaller = jaxbContext.createUnmarshaller();
             listCountryTag = ((Artists) unmarshaller.unmarshal(input));
         }
 

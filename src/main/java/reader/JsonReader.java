@@ -1,6 +1,7 @@
 package reader;
 
 import com.google.gson.Gson;
+import lombok.val;
 import model.Wrapper;
 
 import java.io.*;
@@ -8,7 +9,7 @@ import java.io.*;
 /**
  * Считыватель информации о художниках из JSON-файла с определённой кодировкой.
  */
-public class JsonReader implements ConcreteReader {
+public class JsonReader implements BasicReader {
     /**
      * Считывание информации о стране и её художников с их картинами из JSON-файла с определённой кодировкой.
      * @param path Путь к JSON-файлу, из которого нужно считывать информацию.
@@ -17,7 +18,7 @@ public class JsonReader implements ConcreteReader {
      * @throws IOException Если файла не существует или нет прав доступа на чтение.
      */
     public Wrapper read(final String path, final String encoding) throws IOException {
-        try (BufferedReader input = new BufferedReader(
+        try (val input = new BufferedReader(
                                         new InputStreamReader(
                                             new FileInputStream(path), encoding))) {
             return new Gson().fromJson(input, Wrapper.class);

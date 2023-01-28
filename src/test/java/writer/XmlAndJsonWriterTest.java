@@ -1,17 +1,21 @@
 package writer;
 
 import org.apache.commons.io.IOUtils;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import reader.*;
 
 import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.io.Reader;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * Тестовый класс для записывателей XmlWriter и JsonWriter.
  */
+@Execution(ExecutionMode.CONCURRENT)
 public class XmlAndJsonWriterTest {
     /**
      * Путь к исходному XML-файлу с кодировкой UTF-8.
