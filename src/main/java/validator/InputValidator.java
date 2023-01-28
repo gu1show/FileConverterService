@@ -3,6 +3,7 @@ package validator;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import model.input.ContextConversion;
 import org.apache.any23.encoding.TikaEncodingDetector;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -72,14 +73,28 @@ public class InputValidator {
             throw new IllegalArgumentException(message);
         }
 
-        if (encoding == null) {
+        if (arguments.length != 4) {
             try (val input = new BufferedInputStream(
                                  new FileInputStream(arguments[0]))) {
                 encoding = new TikaEncodingDetector().guessEncoding(input);
             }
         } else {
-            encoding = encoding.toLowerCase();
+            encoding = arguments[3].toLowerCase();
         }
+    }
+
+    /**
+     * Создаёт объект, в котором хранятся обработанные входные данные.
+     * @return Возвращает объект с обработанными входными данными.
+     */
+    public ContextConversion getContextConversion() {
+        if (arguments.length == 4) {
+            return new ContextConversion(arguments[0], arguments[1], arguments[2], arguments[3]);
+        } else if (arguments.length == 3) {
+            return new ContextConversion(arguments[0], arguments[1], arguments[2]);
+        }
+
+        return new ContextConversion(arguments[0], arguments[1]);
     }
 
     /**

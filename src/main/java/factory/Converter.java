@@ -2,8 +2,8 @@ package factory;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import model.input.ContextConversion;
 import reader.BasicReader;
-import validator.InputValidator;
 import writer.BasicWriter;
 
 import javax.xml.bind.JAXBException;
@@ -15,14 +15,9 @@ import java.io.IOException;
 @Slf4j
 public class Converter {
     /**
-     * Аргументы, в которых хранится информация, как производить конвертацию.
+     * Класс, содержащий в себе путь к исходному файлу, к полученному файлу, расширению исходного файла, кодировке.
      */
-    private final String[] arguments;
-
-    /**
-     * Кодировка, в которой считаются и записываются файлы.
-     */
-    private final String encoding;
+    private final ContextConversion contextConversion;
 
     /**
      * Определённый считыватель.
@@ -36,12 +31,10 @@ public class Converter {
 
     /**
      * Создание конвертера с определённой информацией о конвертации.
-     * @param inputValidator Валидатор, который проверил на доступность для записи и чтения представленные файлы.
-     *                       Определяет кодировку введённого файла.
+     * @param contextConversion Информация о конвертации, полученная путём обработки входных параметров.
      */
-    public Converter(InputValidator inputValidator) {
-        this.arguments = inputValidator.getArguments();
-        this.encoding = inputValidator.getEncoding();
+    public Converter(ContextConversion contextConversion) {
+        this.contextConversion = contextConversion;
 
         val converter = createAbstractConverter();
         concreteReader = converter.getReader();
@@ -57,7 +50,9 @@ public class Converter {
         log.info("Начинается считывание.");
 
         log.info("Считывание завершено. Начинается запись.");
-        concreteWriter.write(arguments[1], concreteReader.read(arguments[0], encoding), encoding);
+        concreteWriter.write(contextConversion.getOutputPath(),
+                             concreteReader.read(contextConversion.getInputPath(), contextConversion.getEncoding()),
+                             contextConversion.getEncoding());
     }
 
     /**
@@ -67,10 +62,11 @@ public class Converter {
     private AbstractConverter createAbstractConverter() {
         val converterMaker = new ConverterMaker();
         ConverterType type;
-        if (arguments.length == 2) {
-            type = converterMaker.determineTypeOfConversion(arguments[0], arguments[1]);
+        if (contextConversion.getExtension() == null) {
+            type = converterMaker.determineTypeOfConversion(contextConversion.getInputPath(),
+                                                            contextConversion.getOutputPath());
         } else {
-            type = converterMaker.determineTypeOfConversion(arguments[2]);
+            type = converterMaker.determineTypeOfConversion(contextConversion.getExtension());
         }
 
         return converterMaker.makeConverter(type);

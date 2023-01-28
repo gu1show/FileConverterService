@@ -21,7 +21,7 @@ public class Main {
             validator.validate();
             log.info("Валидация завершена.");
 
-            new Converter(validator).convert();
+            new Converter(validator.getContextConversion()).convert();
         } catch (JAXBException exception) {
             val message = "Невозможно создать экземпляр без аргументов у какого-то класса из пакета model.";
             System.out.println(message);
