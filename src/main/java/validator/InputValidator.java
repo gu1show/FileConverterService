@@ -1,6 +1,6 @@
 package validator;
 
-import exception.TooLittleArgumentsException;
+import exception.TooFewArgumentsException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -47,7 +47,7 @@ public class InputValidator {
         if (arguments.length < 2) {
             val message = "Неверный ввод. На входе должно быть как минимум 2 аргумента.";
             log.error(message);
-            throw new TooLittleArgumentsException(message);
+            throw new TooFewArgumentsException(message);
         }
 
         if (!new File(arguments[0]).exists()) {

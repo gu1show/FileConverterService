@@ -2,7 +2,7 @@ package reader;
 
 import com.google.gson.Gson;
 import lombok.val;
-import model.Wrapper;
+import model.json.WrapperJson;
 
 import java.io.*;
 
@@ -17,11 +17,11 @@ public class JsonReader implements BasicReader {
      * @return Обёртка для хранения информации о художниках.
      * @throws IOException Если файла не существует или нет прав доступа на чтение.
      */
-    public Wrapper read(final String path, final String encoding) throws IOException {
+    public WrapperJson read(final String path, final String encoding) throws IOException {
         try (val input = new BufferedReader(
                                         new InputStreamReader(
                                             new FileInputStream(path), encoding))) {
-            return new Gson().fromJson(input, Wrapper.class);
+            return new Gson().fromJson(input, WrapperJson.class);
         }
     }
 }

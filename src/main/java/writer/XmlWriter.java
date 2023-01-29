@@ -1,7 +1,11 @@
 package writer;
 
 import lombok.val;
-import model.Wrapper;
+import model.json.WrapperJson;
+import model.mapper.Wrapper;
+import model.mapper.WrapperMapper;
+import model.xml.WrapperXml;
+import org.mapstruct.factory.Mappers;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -23,15 +27,27 @@ public class XmlWriter implements BasicWriter {
      */
     public void write(final String path, final Wrapper artistsWrapper, final String encoding) throws JAXBException,
                                                                                                      IOException {
-        val jaxbContext = JAXBContext.newInstance(Wrapper.class);
+        val jaxbContext = JAXBContext.newInstance(WrapperXml.class);
         val marshaller = jaxbContext.createMarshaller();
 
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
 
+        WrapperXml wrapperXml = (WrapperXml) getConvertedWrapper(artistsWrapper);
         try (val output = new OutputStreamWriter(
                               new FileOutputStream(path), encoding)) {
-            marshaller.marshal(artistsWrapper.getArtists(), output);
+            marshaller.marshal(wrapperXml.getArtists(), output);
         }
+    }
+
+    /**
+     * Конвертирует WrapperJson в WrapperXml.
+     * @param artistsWrapper Обёртка с данными о художниках в виде WrapperJson.
+     * @return Обёртка с данными о художниках в виде WrapperXml.
+     */
+    private Wrapper getConvertedWrapper(final Wrapper artistsWrapper) {
+        WrapperMapper mapper = Mappers.getMapper(WrapperMapper.class);
+
+        return mapper.wrapperJsonToXml((WrapperJson) artistsWrapper);
     }
 }

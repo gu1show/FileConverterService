@@ -1,6 +1,7 @@
 package writer;
 
-import model.Wrapper;
+import model.json.WrapperJson;
+import model.mapper.Wrapper;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;

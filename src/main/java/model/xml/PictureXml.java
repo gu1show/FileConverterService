@@ -1,6 +1,5 @@
-package model;
+package model.xml;
 
-import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,25 +10,23 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 /**
- * Обёртка для содержимого тега picture.
+ * Обёртка для содержимого тега "картина".
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Picture {
+public class PictureXml {
     /**
      * Название картины.
      */
     @XmlElement(name = "название")
-    @SerializedName("название")
     private String name;
 
     /**
      * Год публикации картины.
      */
     @XmlElement(name = "годПубликации")
-    @SerializedName("годПубликации")
     private int publicationYear;
 }

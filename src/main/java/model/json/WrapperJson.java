@@ -1,10 +1,11 @@
-package model;
+package model.json;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import model.mapper.Wrapper;
 
 /**
  * Обёртка с данными о художниках.
@@ -13,10 +14,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Wrapper {
+public class WrapperJson implements Wrapper {
     /**
-     * Содержимое тега artists.
+     * Содержимое тега "художники".
      */
     @SerializedName("художники")
-    private Artists artists;
+    private ArtistsJson artists;
 }

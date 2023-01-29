@@ -1,8 +1,8 @@
 package reader;
 
 import lombok.val;
-import model.Artists;
-import model.Wrapper;
+import model.xml.ArtistsXml;
+import model.xml.WrapperXml;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -20,16 +20,16 @@ public class XmlReader implements BasicReader {
      * @throws JAXBException Если невозможно создать экземпляр без аргументов у какого-то класса из model.
      * @throws IOException Если нет файла или прав на доступ к нему.
      */
-    final public Wrapper read(final String path, final String encoding) throws JAXBException, IOException {
-        final Artists listCountryTag;
+    final public WrapperXml read(final String path, final String encoding) throws JAXBException, IOException {
+        final ArtistsXml listCountryTag;
         try (val input = new BufferedReader(
                                         new InputStreamReader(
                                             new FileInputStream(path), encoding))) {
-            val jaxbContext = JAXBContext.newInstance(Artists.class);
+            val jaxbContext = JAXBContext.newInstance(ArtistsXml.class);
             val unmarshaller = jaxbContext.createUnmarshaller();
-            listCountryTag = ((Artists) unmarshaller.unmarshal(input));
+            listCountryTag = ((ArtistsXml) unmarshaller.unmarshal(input));
         }
 
-        return new Wrapper(listCountryTag);
+        return new WrapperXml(listCountryTag);
     }
 }

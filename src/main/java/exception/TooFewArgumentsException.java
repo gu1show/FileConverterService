@@ -3,11 +3,11 @@ package exception;
 /**
  * Сигнализирует о том, что на входе менее двух аргументов.
  */
-public class TooLittleArgumentsException extends Exception {
+public class TooFewArgumentsException extends Exception {
     /**
      * Конструирует исключение с null в качестве подробного сообщения об ошибке.
      */
-    public TooLittleArgumentsException() {
+    public TooFewArgumentsException() {
         super();
     }
 
@@ -15,7 +15,7 @@ public class TooLittleArgumentsException extends Exception {
      * Конструирует исключение с определённым сообщением об ошибке.
      * @param errorMessage Определённое сообщение.
      */
-    public TooLittleArgumentsException(String errorMessage) {
+    public TooFewArgumentsException(String errorMessage) {
         super(errorMessage);
     }
 
@@ -23,7 +23,7 @@ public class TooLittleArgumentsException extends Exception {
      * Конструирует исключение с указанной причиной.
      * @param cause Причина ошибки.
      */
-    public TooLittleArgumentsException(Throwable cause) {
+    public TooFewArgumentsException(Throwable cause) {
         super(cause);
     }
 
@@ -32,7 +32,7 @@ public class TooLittleArgumentsException extends Exception {
      * @param errorMessage Определённое сообщение.
      * @param cause Причина ошибки.
      */
-    public TooLittleArgumentsException(String errorMessage, Throwable cause) {
+    public TooFewArgumentsException(String errorMessage, Throwable cause) {
         super(errorMessage, cause);
     }
 }

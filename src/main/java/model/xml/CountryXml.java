@@ -1,13 +1,15 @@
-package model;
+package model.xml;
 
-import com.google.gson.annotations.SerializedName;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
 /**
- * Обёртка для содержимого тега country.
+ * Обёртка для содержимого тега "страна".
  */
 @XmlRootElement(name = "страна")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -15,18 +17,16 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Country {
+public class CountryXml {
     /**
      * Название страны.
      */
     @XmlAttribute(name = "название")
-    @SerializedName("название")
     private String countryName;
 
     /**
      * Список художников из данной страны.
      */
     @XmlElement(name = "художник")
-    @SerializedName("художник")
-    private List<Artist> artistList;
+    private List<ArtistXml> artistList;
 }

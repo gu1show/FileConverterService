@@ -2,7 +2,10 @@ package writer;
 
 import com.google.gson.GsonBuilder;
 import lombok.val;
-import model.Wrapper;
+import model.mapper.Wrapper;
+import model.mapper.WrapperMapper;
+import model.xml.WrapperXml;
+import org.mapstruct.factory.Mappers;
 
 import java.io.*;
 
@@ -21,7 +24,18 @@ public class JsonWriter implements BasicWriter {
         try (val output = new OutputStreamWriter(
                               new FileOutputStream(path), encoding)) {
             val gson = new GsonBuilder().setPrettyPrinting().create();
-            gson.toJson(artistsWrapper, output);
+            gson.toJson(getConvertedWrapper(artistsWrapper), output);
         }
+    }
+
+    /**
+     * Конвертирует WrapperXml в WrapperJson.
+     * @param artistsWrapper Обёртка с данными о художниках в виде WrapperXml.
+     * @return Обёртка с данными о художниках в виде WrapperJsonы.
+     */
+    private Wrapper getConvertedWrapper(final Wrapper artistsWrapper) {
+        WrapperMapper mapper = Mappers.getMapper(WrapperMapper.class);
+
+        return mapper.wrapperXmlToJson((WrapperXml) artistsWrapper);
     }
 }

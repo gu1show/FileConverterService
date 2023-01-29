@@ -1,6 +1,5 @@
-package model;
+package model.xml;
 
-import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import javax.xml.bind.annotation.*;
 import java.util.List;
 
 /**
- * Обёртка для содержимого тега artist.
+ * Обёртка для содержимого тега "художник".
  */
 @XmlRootElement(name = "художник")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -18,12 +17,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Artist {
+public class ArtistXml {
     /**
      * ФИО художника.
      */
     @XmlElement(name = "полноеИмя")
-    @SerializedName("полноеИмя")
     private String name;
 
     /**
@@ -31,6 +29,5 @@ public class Artist {
      */
     @XmlElementWrapper(name = "картины")
     @XmlElement(name = "картина")
-    @SerializedName("картина")
-    private List<Picture> pictures;
+    private List<PictureXml> pictures;
 }
