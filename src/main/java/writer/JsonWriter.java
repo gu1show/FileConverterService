@@ -31,7 +31,7 @@ public class JsonWriter implements BasicWriter {
     /**
      * Конвертирует WrapperXml в WrapperJson.
      * @param artistsWrapper Обёртка с данными о художниках в виде WrapperXml.
-     * @return Обёртка с данными о художниках в виде WrapperJsonы.
+     * @return Обёртка с данными о художниках в виде WrapperJson.
      */
     private Wrapper getConvertedWrapper(final Wrapper artistsWrapper) {
         WrapperMapper mapper = Mappers.getMapper(WrapperMapper.class);

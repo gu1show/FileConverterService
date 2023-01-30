@@ -8,6 +8,8 @@ import writer.BasicWriter;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Objects;
 
 /**
  * Конвертер файла из одного типа в другой.
@@ -50,9 +52,16 @@ public class Converter {
         log.info("Начинается считывание.");
 
         log.info("Считывание завершено. Начинается запись.");
-        concreteWriter.write(contextConversion.getOutputPath(),
-                             concreteReader.read(contextConversion.getInputPath(), contextConversion.getEncoding()),
-                             contextConversion.getEncoding());
+        try (val inputStreamReader = new InputStreamReader(
+                                         Objects.requireNonNull(
+                                                 getClass()
+                                                         .getClassLoader()
+                                                         .getResourceAsStream(contextConversion.getInputPath())),
+                                         contextConversion.getEncoding())) {
+            concreteWriter.write(contextConversion.getOutputPath(),
+                                 concreteReader.read(inputStreamReader),
+                                 contextConversion.getEncoding());
+        }
     }
 
     /**

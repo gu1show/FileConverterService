@@ -12,15 +12,12 @@ import java.io.*;
 public class JsonReader implements BasicReader {
     /**
      * Считывание информации о стране и её художников с их картинами из JSON-файла с определённой кодировкой.
-     * @param path Путь к JSON-файлу, из которого нужно считывать информацию.
-     * @param encoding Кодировка, в которой записывается файл.
+     * @param inputStreamReader Поток к файлу с художниками.
      * @return Обёртка для хранения информации о художниках.
      * @throws IOException Если файла не существует или нет прав доступа на чтение.
      */
-    public WrapperJson read(final String path, final String encoding) throws IOException {
-        try (val input = new BufferedReader(
-                                        new InputStreamReader(
-                                            new FileInputStream(path), encoding))) {
+    public WrapperJson read(final InputStreamReader inputStreamReader) throws IOException {
+        try (val input = new BufferedReader(inputStreamReader)) {
             return new Gson().fromJson(input, WrapperJson.class);
         }
     }

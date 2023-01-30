@@ -4,10 +4,11 @@ import model.mapper.Wrapper;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * Интерфейс для считывания данных из файла.
  */
 public interface BasicReader {
-    Wrapper read(String path, String encoding) throws JAXBException, IOException;
+    Wrapper read(InputStreamReader inputStreamReader) throws JAXBException, IOException;
 }

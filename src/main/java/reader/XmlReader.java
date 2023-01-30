@@ -14,17 +14,14 @@ import java.io.*;
 public class XmlReader implements BasicReader {
     /**
      * Считывание информации о стране и её художников с их картинами из XML-файла с определённой кодировкой.
-     * @param path Путь к XML-файлу, из которого нужно считывать информацию.
-     * @param encoding Кодировка, в которой записывается файл.
+     * @param inputStreamReader Поток к файлу с художниками.
      * @return Обёртка для хранения информации о художниках.
      * @throws JAXBException Если невозможно создать экземпляр без аргументов у какого-то класса из model.
      * @throws IOException Если нет файла или прав на доступ к нему.
      */
-    final public WrapperXml read(final String path, final String encoding) throws JAXBException, IOException {
+    final public WrapperXml read(final InputStreamReader inputStreamReader) throws JAXBException, IOException {
         final ArtistsXml listCountryTag;
-        try (val input = new BufferedReader(
-                                        new InputStreamReader(
-                                            new FileInputStream(path), encoding))) {
+        try (val input = new BufferedReader(inputStreamReader)) {
             val jaxbContext = JAXBContext.newInstance(ArtistsXml.class);
             val unmarshaller = jaxbContext.createUnmarshaller();
             listCountryTag = ((ArtistsXml) unmarshaller.unmarshal(input));

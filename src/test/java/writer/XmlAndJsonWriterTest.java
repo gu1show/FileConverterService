@@ -1,16 +1,23 @@
 package writer;
 
+import lombok.val;
 import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import reader.*;
 
 import javax.xml.bind.JAXBException;
 import java.io.*;
-import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Тестовый класс для записывателей XmlWriter и JsonWriter.
@@ -20,170 +27,187 @@ public class XmlAndJsonWriterTest {
     /**
      * Путь к исходному XML-файлу с кодировкой UTF-8.
      */
-    private static final String PATH_SOURCE_XML_UTF_8 = "src\\test\\resources\\artists-utf-8.xml";
+    private static final String PATH_SOURCE_XML_UTF_8 = "artists-utf-8.xml";
 
     /**
      * Путь к исходному XML-файлу с кодировкой windows-1251.
      */
-    private static final String PATH_SOURCE_XML_WINDOWS_1251 = "src\\test\\resources\\artists-windows1251.xml";
+    private static final String PATH_SOURCE_XML_WINDOWS_1251 = "artists-windows1251.xml";
 
     /**
      * Путь к исходному JSON-файлу с кодировкой UTF-8.
      */
-    private static final String PATH_SOURCE_JSON_UTF_8 = "src\\test\\resources\\artists-utf-8.json";
+    private static final String PATH_SOURCE_JSON_UTF_8 = "artists-utf-8.json";
 
     /**
      * Путь к исходному JSON-файлу с кодировкой windows-1251.
      */
-    private static final String PATH_SOURCE_JSON_WINDOWS_1251 = "src\\test\\resources\\artists-windows1251.json";
+    private static final String PATH_SOURCE_JSON_WINDOWS_1251 = "artists-windows1251.json";
 
     /**
      * Путь к JSON-файлу, который появится при конвертации, с кодировкой UTF-8.
      */
-    private static final String PATH_CONVERTED_JSON_UTF_8 = "src\\test\\resources\\converted-utf-8.json";
+    private static final String PATH_CONVERTED_JSON_UTF_8 = "converted-utf-8.json";
 
     /**
      * Путь к XML-файлу, который появится при конвертации, с кодировкой UTF-8.
      */
-    private static final String PATH_CONVERTED_XML_UTF_8 = "src\\test\\resources\\converted-utf-8.xml";
+    private static final String PATH_CONVERTED_XML_UTF_8 = "converted-utf-8.xml";
 
     /**
      * Путь к JSON-файлу, который появится при конвертации, с кодировкой windows-1251.
      */
-    private static final String PATH_CONVERTED_JSON_WINDOWS_1251 = "src\\test\\resources\\converted-windows-1251.json";
+    private static final String PATH_CONVERTED_JSON_WINDOWS_1251 = "converted-windows-1251.json";
 
     /**
      * Путь к XML-файлу, который появится при конвертации, с кодировкой windows-1251.
      */
-    private static final String PATH_CONVERTED_XML_WINDOWS_1251 = "src\\test\\resources\\converted-windows-1251.xml";
+    private static final String PATH_CONVERTED_XML_WINDOWS_1251 = "converted-windows-1251.xml";
 
     /**
      * Переменная, отвечающая за кодировку windows-1251. Нужна для передачи в качестве параметра.
      */
-    private static final String encodingWindows1251 = "windows-1251";
+    private static final String ENCODING_WINDOWS_1251 = "windows-1251";
 
     /**
      * Переменная, отвечающая за кодировку windows-1251. Нужна для передачи в качестве параметра.
      */
-    private static final String encodingUtf8 = "UTF-8";
+    private static final String ENCODING_UTF_8 = "UTF-8";
+
+    /**
+     * Экземпляр для создания временных файлов.
+     */
+    @TempDir
+    private Path tempDir;
 
     /**
      * Экземпляр класса XmlReader.
      */
-    private static final XmlReader xmlReader = new XmlReader();
+    private final XmlReader xmlReader;
 
     /**
      * Экземпляр класса JsonReader.
      */
-    private static final JsonReader jsonReader = new JsonReader();
+    private final JsonReader jsonReader;
 
     /**
      * Экземпляр класса XmlWriter.
      */
-    private static final XmlWriter xmlWriter = new XmlWriter();
+    private final XmlWriter xmlWriter;
 
     /**
      * Экземпляр класса JsonWriter.
      */
-    private static final JsonWriter jsonWriter = new JsonWriter();
+    private final JsonWriter jsonWriter;
 
     /**
-     * Проверка, что изначальный и полученный XML-файлы идентичны в кодировке windows-1251.
-     * @throws IOException Если файла не существует.
-     * @throws JAXBException Происходит из-за метода read у XmlReader.
-     * Срабатывает, если невозможно создать экземпляр без аргументов у какого-то класса из storage.
+     * Инициализация объектов для чтения и записи.
      */
-    @Test
-    public void checkWritingToXmlWindows1251() throws IOException, JAXBException {
-        xmlWriter.write(PATH_CONVERTED_XML_WINDOWS_1251,
-                        jsonReader.read(PATH_SOURCE_JSON_WINDOWS_1251, encodingWindows1251),
-                        encodingWindows1251);
-
-        Reader sourceReader = new BufferedReader(
-                                  new InputStreamReader(
-                                      new FileInputStream(PATH_SOURCE_XML_WINDOWS_1251)));
-        Reader convertedFileReader = new BufferedReader(
-                                         new InputStreamReader(
-                                             new FileInputStream(PATH_CONVERTED_XML_WINDOWS_1251)));
-
-        assertTrue(IOUtils.contentEqualsIgnoreEOL(sourceReader, convertedFileReader));
-
-        sourceReader.close();
-        convertedFileReader.close();
+    public XmlAndJsonWriterTest() {
+        xmlReader = new XmlReader();
+        jsonReader = new JsonReader();
+        xmlWriter = new XmlWriter();
+        jsonWriter = new JsonWriter();
     }
 
     /**
-     * Проверка, что изначальный и полученный JSON-файлы идентичны в кодировке windows-1251.
+     * Проверка, что изначальный и полученный XML-файлы идентичны.
      * @throws IOException Если файла не существует.
      * @throws JAXBException Происходит из-за метода read у XmlReader.
      * Срабатывает, если невозможно создать экземпляр без аргументов у какого-то класса из storage.
      */
-    @Test
-    public void checkWritingToJsonWindows1251() throws IOException, JAXBException {
-        jsonWriter.write(PATH_CONVERTED_JSON_WINDOWS_1251,
-                         xmlReader.read(PATH_SOURCE_XML_WINDOWS_1251, encodingWindows1251),
-                         encodingWindows1251);
+    @ParameterizedTest
+    @MethodSource("provideParametersWriteToXml")
+    public void checkWritingToXml(final String pathConvertedFile, final String pathToConvertFile,
+                                  final String pathCorrectFile, final String encoding) throws IOException,
+                                                                                              JAXBException {
+        Path convertedPath = Files.createFile(tempDir.resolve(pathConvertedFile));
 
-        Reader sourceReader = new BufferedReader(
-                                  new InputStreamReader(
-                                      new FileInputStream(PATH_SOURCE_JSON_WINDOWS_1251)));
-        Reader convertedFileReader = new BufferedReader(
-                                         new InputStreamReader(
-                                             new FileInputStream(PATH_CONVERTED_JSON_WINDOWS_1251)));
+        try (val inputStreamReader = new InputStreamReader(
+                                         Objects.requireNonNull(
+                                                 getClass()
+                                                         .getClassLoader()
+                                                         .getResourceAsStream(pathToConvertFile)),
+                                         encoding)) {
+            xmlWriter.write(convertedPath.toString(),
+                            jsonReader.read(inputStreamReader),
+                            encoding);
+        }
 
-        assertTrue(IOUtils.contentEqualsIgnoreEOL(sourceReader, convertedFileReader));
-
-        sourceReader.close();
-        convertedFileReader.close();
+        assertThat(areFilesSame(pathCorrectFile, convertedPath)).isTrue();
     }
 
     /**
-     * Проверка, что изначальный и полученный XML-файлы идентичны в кодировке UTF-8.
+     * Проверка, что изначальный и полученный JSON-файлы идентичны.
      * @throws IOException Если файла не существует.
      * @throws JAXBException Происходит из-за метода read у XmlReader.
      * Срабатывает, если невозможно создать экземпляр без аргументов у какого-то класса из storage.
      */
-    @Test
-    public void checkWritingToXmlUtf8() throws IOException, JAXBException {
-        xmlWriter.write(PATH_CONVERTED_XML_UTF_8,
-                jsonReader.read(PATH_SOURCE_JSON_UTF_8, encodingUtf8),
-                encodingUtf8);
+    @ParameterizedTest
+    @MethodSource("provideParametersWriteToJson")
+    public void checkWritingToJson(final String pathConvertedFile, final String pathToConvertFile,
+                                   final String pathCorrectFile, final String encoding) throws IOException,
+                                                                                               JAXBException {
+        Path convertedPath = Files.createFile(tempDir.resolve(pathConvertedFile));
 
-        Reader sourceReader = new BufferedReader(
-                new InputStreamReader(
-                        new FileInputStream(PATH_SOURCE_XML_UTF_8)));
-        Reader convertedFileReader = new BufferedReader(
-                new InputStreamReader(
-                        new FileInputStream(PATH_CONVERTED_XML_UTF_8)));
+        try (val inputStreamReader = new InputStreamReader(
+                                         Objects.requireNonNull(
+                                                 getClass()
+                                                         .getClassLoader()
+                                                         .getResourceAsStream(pathToConvertFile)),
+                                         encoding)) {
+            jsonWriter.write(convertedPath.toString(),
+                             xmlReader.read(inputStreamReader),
+                             encoding);
+        }
 
-        assertTrue(IOUtils.contentEqualsIgnoreEOL(sourceReader, convertedFileReader));
-
-        sourceReader.close();
-        convertedFileReader.close();
+        assertThat(areFilesSame(pathCorrectFile, convertedPath)).isTrue();
     }
 
     /**
-     * Проверка, что изначальный и полученный JSON-файлы идентичны в кодировке UTF-8.
-     * @throws IOException Если файла не существует.
-     * @throws JAXBException Происходит из-за метода read у XmlReader.
-     * Срабатывает, если невозможно создать экземпляр без аргументов у какого-то класса из storage.
+     * Предоставляет параметры для тестов конвертации в XML.
+     * @return Параметры для тестов.
      */
-    @Test
-    public void checkWritingToJsonUtf8() throws IOException, JAXBException {
-        jsonWriter.write(PATH_CONVERTED_JSON_UTF_8,
-                xmlReader.read(PATH_SOURCE_XML_UTF_8, encodingUtf8),
-                encodingUtf8);
+    private static Stream<Arguments> provideParametersWriteToXml() {
+        return Stream.of(
+                Arguments.of(PATH_CONVERTED_XML_WINDOWS_1251, PATH_SOURCE_JSON_WINDOWS_1251,
+                        PATH_SOURCE_XML_WINDOWS_1251, ENCODING_WINDOWS_1251),
+                Arguments.of(PATH_CONVERTED_XML_UTF_8, PATH_SOURCE_JSON_UTF_8,
+                        PATH_SOURCE_XML_UTF_8, ENCODING_UTF_8)
+        );
+    }
 
-        Reader sourceReader = new BufferedReader(
-                new InputStreamReader(
-                        new FileInputStream(PATH_SOURCE_JSON_UTF_8)));
-        Reader convertedFileReader = new BufferedReader(
-                new InputStreamReader(
-                        new FileInputStream(PATH_CONVERTED_JSON_UTF_8)));
+    /**
+     * Предоставляет параметры для тестов конвертации в JSON.
+     * @return Параметры для тестов.
+     */
+    private static Stream<Arguments> provideParametersWriteToJson() {
+        return Stream.of(
+                Arguments.of(PATH_CONVERTED_JSON_WINDOWS_1251, PATH_SOURCE_XML_WINDOWS_1251,
+                             PATH_SOURCE_JSON_WINDOWS_1251, ENCODING_WINDOWS_1251),
+                Arguments.of(PATH_CONVERTED_JSON_UTF_8, PATH_SOURCE_XML_UTF_8,
+                             PATH_SOURCE_JSON_UTF_8, ENCODING_UTF_8)
+        );
+    }
 
-        assertTrue(IOUtils.contentEqualsIgnoreEOL(sourceReader, convertedFileReader));
-
-        sourceReader.close();
-        convertedFileReader.close();
+    /**
+     * Проверяет содержимое файлов на идентичность, пропуская разделители.
+     * @param pathToCorrectFile Путь к файлу с корректным содержимым.
+     * @param convertedPath Путь к полученному в результате конвертации файлу.
+     * @return true, если содержимое файлов идентично, false - иначе
+     * @throws IOException Если файла не существует.
+     */
+    private boolean areFilesSame(final String pathToCorrectFile, final Path convertedPath) throws IOException {
+        try (val sourceReader = new BufferedReader(
+                                    new InputStreamReader(
+                                            Objects.requireNonNull(
+                                                    getClass()
+                                                            .getClassLoader()
+                                                            .getResourceAsStream(pathToCorrectFile))));
+             val convertedFileReader = new BufferedReader(
+                                           new InputStreamReader(
+                                               new FileInputStream(convertedPath.toString())))) {
+            return IOUtils.contentEqualsIgnoreEOL(sourceReader, convertedFileReader);
+        }
     }
 }
