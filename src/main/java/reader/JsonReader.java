@@ -10,6 +10,7 @@ import java.io.*;
  * Считыватель информации о художниках из JSON-файла с определённой кодировкой.
  */
 public class JsonReader implements BasicReader {
+    private static final Gson GSON = new Gson();
     /**
      * Считывание информации о стране и её художников с их картинами из JSON-файла с определённой кодировкой.
      * @param inputStreamReader Поток к файлу с художниками.
@@ -18,7 +19,7 @@ public class JsonReader implements BasicReader {
      */
     public WrapperJson read(final InputStreamReader inputStreamReader) throws IOException {
         try (val input = new BufferedReader(inputStreamReader)) {
-            return new Gson().fromJson(input, WrapperJson.class);
+            return GSON.fromJson(input, WrapperJson.class);
         }
     }
 }

@@ -3,11 +3,13 @@ package factory;
 import reader.BasicReader;
 import writer.BasicWriter;
 
+import javax.xml.bind.JAXBException;
+
 /**
  * Интерфейс для создания конвертера.
  */
 public interface AbstractConverter {
-    BasicReader getReader();
+    BasicReader getReader() throws JAXBException;
 
-    BasicWriter getWriter();
+    BasicWriter getWriter() throws JAXBException;
 }

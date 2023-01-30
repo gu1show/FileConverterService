@@ -5,6 +5,8 @@ import reader.JsonReader;
 import writer.BasicWriter;
 import writer.XmlWriter;
 
+import javax.xml.bind.JAXBException;
+
 /**
  * Фабрика для конвертации из JSON в XML.
  */
@@ -23,7 +25,7 @@ public class Json2XmlFactory implements AbstractConverter {
      * @return XmlReader.
      */
     @Override
-    public BasicWriter getWriter() {
+    public BasicWriter getWriter() throws JAXBException {
         return new XmlWriter();
     }
 }

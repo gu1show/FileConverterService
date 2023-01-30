@@ -35,7 +35,7 @@ public class Converter {
      * Создание конвертера с определённой информацией о конвертации.
      * @param contextConversion Информация о конвертации, полученная путём обработки входных параметров.
      */
-    public Converter(ContextConversion contextConversion) {
+    public Converter(ContextConversion contextConversion) throws JAXBException {
         this.contextConversion = contextConversion;
 
         val converter = createAbstractConverter();

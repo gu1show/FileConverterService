@@ -6,12 +6,18 @@ import model.xml.WrapperXml;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.*;
 
 /**
  * Считыватель информации о художниках из XML-файла с определённой кодировкой.
  */
 public class XmlReader implements BasicReader {
+    private final Unmarshaller unmarshaller;
+
+    public XmlReader() throws JAXBException {
+        unmarshaller = JAXBContext.newInstance(ArtistsXml.class).createUnmarshaller();
+    }
     /**
      * Считывание информации о стране и её художников с их картинами из XML-файла с определённой кодировкой.
      * @param inputStreamReader Поток к файлу с художниками.
@@ -22,8 +28,6 @@ public class XmlReader implements BasicReader {
     final public WrapperXml read(final InputStreamReader inputStreamReader) throws JAXBException, IOException {
         final ArtistsXml listCountryTag;
         try (val input = new BufferedReader(inputStreamReader)) {
-            val jaxbContext = JAXBContext.newInstance(ArtistsXml.class);
-            val unmarshaller = jaxbContext.createUnmarshaller();
             listCountryTag = ((ArtistsXml) unmarshaller.unmarshal(input));
         }
 

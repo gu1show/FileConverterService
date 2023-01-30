@@ -16,6 +16,12 @@ import java.io.*;
  * Записыватель информации о художниках в XML-файл с определённой кодировкой.
  */
 public class XmlWriter implements BasicWriter {
+    private final Marshaller marshaller;
+
+    public XmlWriter() throws JAXBException {
+        marshaller = JAXBContext.newInstance(WrapperXml.class).createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    }
     /**
      * Записывает информацию о художниках в XML-файл по заданной кодировке.
      * @param path Путь, куда записывается информация о художниках.
@@ -27,10 +33,6 @@ public class XmlWriter implements BasicWriter {
      */
     public void write(final String path, final Wrapper artistsWrapper, final String encoding) throws JAXBException,
                                                                                                      IOException {
-        val jaxbContext = JAXBContext.newInstance(WrapperXml.class);
-        val marshaller = jaxbContext.createMarshaller();
-
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
 
         WrapperXml wrapperXml = (WrapperXml) getConvertedWrapper(artistsWrapper);
@@ -46,8 +48,6 @@ public class XmlWriter implements BasicWriter {
      * @return Обёртка с данными о художниках в виде WrapperXml.
      */
     private Wrapper getConvertedWrapper(final Wrapper artistsWrapper) {
-        WrapperMapper mapper = Mappers.getMapper(WrapperMapper.class);
-
-        return mapper.wrapperJsonToXml((WrapperJson) artistsWrapper);
+        return Mappers.getMapper(WrapperMapper.class).wrapperJsonToXml((WrapperJson) artistsWrapper);
     }
 }

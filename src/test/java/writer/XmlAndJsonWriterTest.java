@@ -103,7 +103,7 @@ public class XmlAndJsonWriterTest {
     /**
      * Инициализация объектов для чтения и записи.
      */
-    public XmlAndJsonWriterTest() {
+    public XmlAndJsonWriterTest() throws JAXBException {
         xmlReader = new XmlReader();
         jsonReader = new JsonReader();
         xmlWriter = new XmlWriter();

@@ -1,5 +1,6 @@
 package writer;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.val;
 import model.mapper.Wrapper;
@@ -13,6 +14,7 @@ import java.io.*;
  * Записыватель информации о художниках в JSON-файл с определённой кодировкой.
  */
 public class JsonWriter implements BasicWriter {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     /**
      * Записывает информацию о художниках в JSON-файл по заданной кодировке.
      * @param path Путь, куда записывается информация о художниках.
@@ -23,8 +25,7 @@ public class JsonWriter implements BasicWriter {
     public void write(final String path, final Wrapper artistsWrapper, final String encoding) throws IOException {
         try (val output = new OutputStreamWriter(
                               new FileOutputStream(path), encoding)) {
-            val gson = new GsonBuilder().setPrettyPrinting().create();
-            gson.toJson(getConvertedWrapper(artistsWrapper), output);
+            GSON.toJson(getConvertedWrapper(artistsWrapper), output);
         }
     }
 
@@ -34,8 +35,6 @@ public class JsonWriter implements BasicWriter {
      * @return Обёртка с данными о художниках в виде WrapperJson.
      */
     private Wrapper getConvertedWrapper(final Wrapper artistsWrapper) {
-        WrapperMapper mapper = Mappers.getMapper(WrapperMapper.class);
-
-        return mapper.wrapperXmlToJson((WrapperXml) artistsWrapper);
+        return Mappers.getMapper(WrapperMapper.class).wrapperXmlToJson((WrapperXml) artistsWrapper);
     }
 }
