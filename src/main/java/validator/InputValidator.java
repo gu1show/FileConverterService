@@ -30,6 +30,11 @@ public class InputValidator {
     private String encoding;
 
     /**
+     * Объект, определяющий кодировку файла, если её не задал пользователь.
+     */
+    private static final TikaEncodingDetector ENCODING_DETECTOR = new TikaEncodingDetector();
+
+    /**
      * Создание валидатора с определённой информацией о конвертации.
      * @param arguments Аргументы, в которых хранится информация, как производить конвертацию.
      */
@@ -77,7 +82,7 @@ public class InputValidator {
         if (arguments.length != 4) {
             try (val input = new BufferedInputStream(
                                  new FileInputStream(arguments[0]))) {
-                encoding = new TikaEncodingDetector().guessEncoding(input);
+                encoding = ENCODING_DETECTOR.guessEncoding(input);
             }
         } else {
             encoding = arguments[3].toLowerCase();
