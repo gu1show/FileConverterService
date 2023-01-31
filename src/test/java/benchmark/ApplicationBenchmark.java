@@ -106,12 +106,16 @@ public class ApplicationBenchmark {
      */
     @Benchmark
     public void testXmlReader() throws IOException, JAXBException {
-        new XmlReader().read(new InputStreamReader(
-                                 Objects.requireNonNull(
-                                         getClass()
-                                                 .getClassLoader()
-                                                 .getResourceAsStream("artists-utf-8.xml")),
-                      "UTF-8"));
+        XmlReader xmlReader = new XmlReader();
+
+        for (int iteration = 0; iteration < 5000; iteration++) {
+            xmlReader.read(new InputStreamReader(
+                               Objects.requireNonNull(
+                                       getClass()
+                                               .getClassLoader()
+                                               .getResourceAsStream("artists-utf-8.xml")),
+                    "UTF-8"));
+        }
     }
 
     /**
@@ -120,12 +124,15 @@ public class ApplicationBenchmark {
      */
     @Benchmark
     public void testJsonReader() throws IOException {
-        new JsonReader().read(new InputStreamReader(
-                                  Objects.requireNonNull(
-                                          getClass()
-                                                  .getClassLoader()
-                                                  .getResourceAsStream("artists-utf-8.json")),
-                       "UTF-8"));
+        JsonReader jsonReader = new JsonReader();
+        for (int iteration = 0; iteration < 5000; iteration++) {
+            jsonReader.read(new InputStreamReader(
+                    Objects.requireNonNull(
+                            getClass()
+                                    .getClassLoader()
+                                    .getResourceAsStream("artists-utf-8.json")),
+                    "UTF-8"));
+        }
     }
 
     /**
@@ -140,7 +147,11 @@ public class ApplicationBenchmark {
         Path tempPath = Path.of(helper.pathToConvertedXml);
         Path convertedPath = Files.createFile(tempPath);
 
-        new XmlWriter().write(convertedPath.toString(), helper.wrapperJson, "UTF-8");
+        XmlWriter xmlWriter = new XmlWriter();
+        for (int iteration = 0; iteration < 5000; iteration++) {
+            xmlWriter.write(convertedPath.toString(), helper.wrapperJson, "UTF-8");
+        }
+
 
         Files.deleteIfExists(tempPath);
     }
@@ -155,7 +166,10 @@ public class ApplicationBenchmark {
         Path tempPath = Path.of(helper.pathToConvertedJson);
         Path convertedPath = Files.createFile(tempPath);
 
-        new JsonWriter().write(convertedPath.toString(), helper.wrapperXml, "UTF-8");
+        JsonWriter jsonWriter = new JsonWriter();
+        for (int iteration = 0; iteration < 5000; iteration++) {
+            jsonWriter.write(convertedPath.toString(), helper.wrapperXml, "UTF-8");
+        }
 
         Files.deleteIfExists(tempPath);
     }
@@ -169,7 +183,11 @@ public class ApplicationBenchmark {
     public void testValidator2Arguments(final Helper helper) throws Exception {
         Path convertedPath = Files.createFile(Path.of("converted.xml"));
 
-        new InputValidator(helper.input2Arguments).validate();
+        InputValidator inputValidator = new InputValidator(helper.input2Arguments);
+        for (int iteration = 0; iteration < 5000; iteration++) {
+            inputValidator.validate();
+        }
+
 
         Files.deleteIfExists(convertedPath);
     }
@@ -184,7 +202,10 @@ public class ApplicationBenchmark {
     public void testValidator4Arguments(final Helper helper) throws Exception {
         Path convertedPath = Files.createFile(Path.of("converted.xml"));
 
-        new InputValidator(helper.input4Arguments).validate();
+        InputValidator inputValidator = new InputValidator(helper.input4Arguments);
+        for (int iteration = 0; iteration < 5000; iteration++) {
+            inputValidator.validate();
+        }
 
         Files.deleteIfExists(convertedPath);
     }
