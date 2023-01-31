@@ -10,6 +10,9 @@ import java.io.*;
  * Считыватель информации о художниках из JSON-файла с определённой кодировкой.
  */
 public class JsonReader implements BasicReader {
+    /**
+     * Экземпляр класса Gson, который считывает из JSON-файла.
+     */
     private static final Gson GSON = new Gson();
     /**
      * Считывание информации о стране и её художников с их картинами из JSON-файла с определённой кодировкой.

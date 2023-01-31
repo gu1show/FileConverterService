@@ -16,8 +16,16 @@ import java.io.*;
  * Записыватель информации о художниках в XML-файл с определённой кодировкой.
  */
 public class XmlWriter implements BasicWriter {
+    /**
+     * Экземпляр класса Marshaller, который проводит конвертацию в XML-файл.
+     */
     private final Marshaller marshaller;
 
+    /**
+     * Инициализирует Marshaller для многократного последующего использования.
+     * @throws JAXBException Срабатывает, если невозможно создать экземпляр
+     *                       без аргументов у какого-то класса из model.
+     */
     public XmlWriter() throws JAXBException {
         marshaller = JAXBContext.newInstance(WrapperXml.class).createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);

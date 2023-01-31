@@ -13,8 +13,16 @@ import java.io.*;
  * Считыватель информации о художниках из XML-файла с определённой кодировкой.
  */
 public class XmlReader implements BasicReader {
+    /**
+     * Экземпляр класса Unmarshaller, который считывает из XML-файла.
+     */
     private final Unmarshaller unmarshaller;
 
+    /**
+     * Инициализирует Unmarshaller для многократного последующего использования.
+     * @throws JAXBException Срабатывает, если невозможно создать экземпляр
+     *                       без аргументов у какого-то класса из model.
+     */
     public XmlReader() throws JAXBException {
         unmarshaller = JAXBContext.newInstance(ArtistsXml.class).createUnmarshaller();
     }

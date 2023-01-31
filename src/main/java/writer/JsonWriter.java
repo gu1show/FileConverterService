@@ -14,6 +14,9 @@ import java.io.*;
  * Записыватель информации о художниках в JSON-файл с определённой кодировкой.
  */
 public class JsonWriter implements BasicWriter {
+    /**
+     * Экземпляр класса Gson, который проводит конвертацию в JSON-файл.
+     */
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     /**
      * Записывает информацию о художниках в JSON-файл по заданной кодировке.
