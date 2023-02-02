@@ -14,6 +14,7 @@ public class JsonReader implements BasicReader {
      * Экземпляр класса Gson, который считывает из JSON-файла.
      */
     private static final Gson GSON = new Gson();
+
     /**
      * Считывание информации о стране и её художников с их картинами из JSON-файла с определённой кодировкой.
      * @param inputStreamReader Поток к файлу с художниками.

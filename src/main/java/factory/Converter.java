@@ -45,7 +45,7 @@ public class Converter {
 
     /**
      * Конвертирует файлы из одного типа в другой.
-     * @throws JAXBException Если невозможно создать экземпляр без аргументов у какого-то класса из storage.
+     * @throws JAXBException Если невозможно создать экземпляр без аргументов у какого-то класса из model.
      * @throws IOException Если файла не существует, отсутствуют права на чтение или запись.
      */
     public void convert() throws JAXBException, IOException {

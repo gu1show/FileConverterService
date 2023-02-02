@@ -14,18 +14,18 @@ import java.io.*;
  */
 public class XmlReader implements BasicReader {
     /**
-     * Экземпляр класса Unmarshaller, который считывает из XML-файла.
+     * Экземпляр класса JAXBContext, который создаёт Unmarshaller для считывания из XML-файла.
      */
-    private final Unmarshaller unmarshaller;
+    private static JAXBContext jaxbContext;
 
     /**
-     * Инициализирует Unmarshaller для многократного последующего использования.
-     * @throws JAXBException Срабатывает, если невозможно создать экземпляр
-     *                       без аргументов у какого-то класса из model.
+     * Создание считывателя.
+     * @throws JAXBException Если невозможно создать экземпляр без аргументов у какого-то класса из model.
      */
     public XmlReader() throws JAXBException {
-        unmarshaller = JAXBContext.newInstance(ArtistsXml.class).createUnmarshaller();
+        jaxbContext = JAXBContext.newInstance(ArtistsXml.class);
     }
+
     /**
      * Считывание информации о стране и её художников с их картинами из XML-файла с определённой кодировкой.
      * @param inputStreamReader Поток к файлу с художниками.
@@ -35,6 +35,7 @@ public class XmlReader implements BasicReader {
      */
     final public WrapperXml read(final InputStreamReader inputStreamReader) throws JAXBException, IOException {
         final ArtistsXml listCountryTag;
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
         try (val input = new BufferedReader(inputStreamReader)) {
             listCountryTag = ((ArtistsXml) unmarshaller.unmarshal(input));
         }

@@ -17,19 +17,18 @@ import java.io.*;
  */
 public class XmlWriter implements BasicWriter {
     /**
-     * Экземпляр класса Marshaller, который проводит конвертацию в XML-файл.
+     * Экземпляр класса JAXBContext, который создаёт Marshaller для записи в XML-файл.
      */
-    private final Marshaller marshaller;
+    private static JAXBContext jaxbContext;
 
     /**
-     * Инициализирует Marshaller для многократного последующего использования.
-     * @throws JAXBException Срабатывает, если невозможно создать экземпляр
-     *                       без аргументов у какого-то класса из model.
+     * Создание писателя.
+     * @throws JAXBException Если невозможно создать экземпляр без аргументов у какого-то класса из model.
      */
     public XmlWriter() throws JAXBException {
-        marshaller = JAXBContext.newInstance(WrapperXml.class).createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        jaxbContext = JAXBContext.newInstance(WrapperXml.class);
     }
+
     /**
      * Записывает информацию о художниках в XML-файл по заданной кодировке.
      * @param path Путь, куда записывается информация о художниках.
@@ -41,6 +40,8 @@ public class XmlWriter implements BasicWriter {
      */
     public void write(final String path, final Wrapper artistsWrapper, final String encoding) throws JAXBException,
                                                                                                      IOException {
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.setProperty(Marshaller.JAXB_ENCODING, encoding);
 
         WrapperXml wrapperXml = (WrapperXml) getConvertedWrapper(artistsWrapper);

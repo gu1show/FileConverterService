@@ -18,6 +18,7 @@ public class JsonWriter implements BasicWriter {
      * Экземпляр класса Gson, который проводит конвертацию в JSON-файл.
      */
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    
     /**
      * Записывает информацию о художниках в JSON-файл по заданной кодировке.
      * @param path Путь, куда записывается информация о художниках.
